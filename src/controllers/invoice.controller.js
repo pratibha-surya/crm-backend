@@ -1,0 +1,25 @@
+import {
+  getInvoicesService,
+  createInvoiceService,
+  updatePaymentStatusService
+} from "../services/invoice.service.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiResponse from "../utils/ApiResponse.js";
+
+export const getInvoices = asyncHandler(async (req, res) => {
+  const invoices = await getInvoicesService(req.query, req.user?.companyId);
+  return res.status(200).json(new ApiResponse(200, invoices, "Invoices fetched successfully"));
+});
+
+export const createInvoice = asyncHandler(async (req, res) => {
+  const invoice = await createInvoiceService({
+    ...req.body,
+    companyId: req.user?.companyId || req.body.companyId
+  });
+  return res.status(201).json(new ApiResponse(201, invoice, "Invoice created successfully"));
+});
+
+export const updatePaymentStatus = asyncHandler(async (req, res) => {
+  const updated = await updatePaymentStatusService(req.params.id, req.body.paymentStatus);
+  return res.status(200).json(new ApiResponse(200, updated, "Invoice payment status updated"));
+});
