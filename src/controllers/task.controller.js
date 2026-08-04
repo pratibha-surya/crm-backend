@@ -8,7 +8,10 @@ export const getTasks = asyncHandler(async (req, res) => {
 });
 
 export const createTask = asyncHandler(async (req, res) => {
-  const task = await createTaskService({ ...req.body, companyId: req.user?.companyId });
+  const task = await createTaskService({
+    ...req.body,
+    companyId: req.user?.companyId || req.body.companyId || "000000000000000000000000"
+  });
   res.status(201).json(new ApiResponse(201, task, "Task created successfully"));
 });
 

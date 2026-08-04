@@ -13,3 +13,7 @@ export const createLeadService = async (leadData) => {
 export const updateLeadStatusService = async (leadId, status) => {
   return await Lead.findByIdAndUpdate(leadId, { status }, { new: true });
 };
+
+export const assignLeadService = async (leadId, userId) => {
+  return await Lead.findByIdAndUpdate(leadId, { assignedTo: userId }, { new: true }).populate("assignedTo", "firstName lastName email");
+};

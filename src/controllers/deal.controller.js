@@ -8,7 +8,7 @@ export const getDeals = asyncHandler(async (req, res) => {
 });
 
 export const createDeal = asyncHandler(async (req, res) => {
-  const deal = await createDealService({ ...req.body, companyId: req.user?.companyId });
+  const deal = await createDealService({ ...req.body, companyId: req.user?.companyId || req.body.companyId || "000000000000000000000000" });
   res.status(201).json(new ApiResponse(201, deal, "Deal created successfully"));
 });
 

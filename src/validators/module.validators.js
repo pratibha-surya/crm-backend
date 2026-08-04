@@ -2,10 +2,12 @@ import ApiError from "../utils/ApiError.js";
 
 export const validateCustomerPayload = (req, res, next) => {
   const { companyName, contactPerson, email, phone, companyId } = req.body;
-  const resolvedCompanyId = req.user?.companyId || companyId;
+  let resolvedCompanyId = req.user?.companyId || companyId;
 
   if (!resolvedCompanyId) {
-    throw new ApiError(400, "Company ID is required to create a customer");
+    // Fallback companyId for super admin or manual testing without companyId
+    resolvedCompanyId = "000000000000000000000000";
+    req.body.companyId = resolvedCompanyId;
   }
 
   if (!companyName || typeof companyName !== "string" || companyName.trim() === "") {

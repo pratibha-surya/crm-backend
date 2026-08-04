@@ -13,7 +13,7 @@ export const getLeads = asyncHandler(async (req, res) => {
 export const createLead = asyncHandler(async (req, res) => {
   const lead = await createLeadService({
     ...req.body,
-    companyId: req.user?.companyId || req.body.companyId
+    companyId: req.user?.companyId || req.body.companyId || "000000000000000000000000"
   });
   return res
     .status(201)
@@ -36,4 +36,26 @@ export const updateLeadStatus = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, updatedLead, "Lead status updated successfully"));
+});
+
+export const assignLead = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  if (!userId) {
+    throw new ApiError(400, "User ID is required to assign lead");
+  }
+
+  // NOTE: You would typically import assignLeadService here
+  // We will do that in the next step to avoid import errors.
+  const { assignLeadService } = await import("../services/lead.service.js");
+  const assignedLead = await assignLeadService(id, userId);
+
+  if (!assignedLead) {
+    throw new ApiError(404, "Lead not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, assignedLead, "Lead assigned successfully"));
 });

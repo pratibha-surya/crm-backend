@@ -22,7 +22,7 @@ const router = express.Router();
  * /roles:
  *   get:
  *     summary: Get all roles
- *     tags: [Roles]
+ *     tags: [02. Role & Permission]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -38,7 +38,7 @@ router.get("/", protect, checkPermission("roles", "read"), getRoles);
  * /roles:
  *   post:
  *     summary: Create a role with permissions
- *     tags: [Roles]
+ *     tags: [02. Role & Permission]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -79,7 +79,7 @@ router.post("/", protect, checkPermission("roles", "create"), createRole);
  * /roles/{id}:
  *   put:
  *     summary: Update a role
- *     tags: [Roles]
+ *     tags: [02. Role & Permission]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -114,7 +114,7 @@ router.put("/:id", protect, checkPermission("roles", "update"), updateRole);
  * /roles/{id}:
  *   delete:
  *     summary: Delete a role
- *     tags: [Roles]
+ *     tags: [02. Role & Permission]
  *     security:
  *       - bearerAuth: []
  *     parameters:

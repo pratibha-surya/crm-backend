@@ -7,6 +7,9 @@ export const getProductsService = async (query = {}, companyId) => {
   return await Product.find(filter).sort({ name: 1 });
 };
 
-export const createProductService = async (data) => {
-  return await Product.create(data);
+export const createProductService = async (data, companyId) => {
+  return await Product.create({
+    ...data,
+    companyId,
+  });
 };
