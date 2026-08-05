@@ -12,7 +12,25 @@ const taskSchema = new Schema(
     status: { type: String, enum: ["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"], default: "PENDING", index: true },
     assignedTo: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-    isRecurring: { type: Boolean, default: false }
+    isRecurring: { type: Boolean, default: false },
+    recurrence: {
+      frequency: { type: String, enum: ["DAILY", "WEEKLY", "MONTHLY", "NONE"], default: "NONE" },
+      nextOccurrence: Date
+    },
+    comments: [
+      {
+        userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        userName: String,
+        text: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now }
+      }
+    ],
+    attachments: [
+      {
+        name: String,
+        url: String
+      }
+    ]
   },
   { timestamps: true }
 );

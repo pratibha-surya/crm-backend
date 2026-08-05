@@ -22,7 +22,21 @@ const leadSchema = new Schema(
       index: true
     },
     leadScore: { type: Number, default: 0 },
-    assignedTo: { type: Schema.Types.ObjectId, ref: "User", index: true }
+    assignedTo: { type: Schema.Types.ObjectId, ref: "User", index: true },
+    notes: [
+      {
+        text: { type: String, required: true },
+        authorName: String,
+        createdAt: { type: Date, default: Date.now }
+      }
+    ],
+    timeline: [
+      {
+        activity: { type: String, required: true },
+        performedBy: String,
+        timestamp: { type: Date, default: Date.now }
+      }
+    ]
   },
   { timestamps: true }
 );

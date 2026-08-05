@@ -14,6 +14,17 @@ import productRoutes from "./product.routes.js";
 import companyRoutes from "./company.routes.js";
 import settingsRoutes from "./settings.routes.js";
 import reportRoutes from "./report.routes.js";
+import branchRoutes from "./branch.routes.js";
+import departmentRoutes from "./department.routes.js";
+import designationRoutes from "./designation.routes.js";
+import attendanceRoutes from "./attendance.routes.js";
+import followupRoutes from "./followup.routes.js";
+import paymentRoutes from "./payment.routes.js";
+import leaveRoutes from "./leave.routes.js";
+import calendarRoutes from "./calendar.routes.js";
+import auditLogRoutes from "./auditLog.routes.js";
+import dashboardRoutes from "./dashboard.routes.js";
+import inquiryRoutes from "./inquiry.route.js";
 
 const router = express.Router();
 
@@ -43,5 +54,16 @@ router.use("/products", productRoutes);
 router.use("/companies", companyRoutes);
 router.use("/settings", settingsRoutes);
 router.use("/reports", reportRoutes);
+router.use("/branches", branchRoutes);
+router.use("/departments", departmentRoutes);
+router.use("/designations", designationRoutes);
+router.use("/attendance", attendanceRoutes);
+router.use("/followups", followupRoutes);
+router.use("/payments", paymentRoutes);
+router.use("/leaves", leaveRoutes);
+router.use("/calendar", calendarRoutes);
+router.use("/audit-logs", auditLogRoutes);
+router.use("/dashboard", dashboardRoutes);
+router.use("/inquiries", inquiryRoutes);
 
 export default router;

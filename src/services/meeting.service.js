@@ -10,3 +10,24 @@ export const getMeetingsService = async (query = {}, companyId) => {
 export const createMeetingService = async (data) => {
   return await Meeting.create(data);
 };
+
+export const getMeetingByIdService = async (id, companyId) => {
+  const filter = companyId ? { _id: id, companyId } : { _id: id };
+  const meeting = await Meeting.findOne(filter).populate("organizer", "firstName lastName email");
+  if (!meeting) throw new ApiError(404, "Meeting not found");
+  return meeting;
+};
+
+export const updateMeetingService = async (id, updateData, companyId) => {
+  const filter = companyId ? { _id: id, companyId } : { _id: id };
+  const meeting = await Meeting.findOneAndUpdate(filter, updateData, { new: true, runValidators: true });
+  if (!meeting) throw new ApiError(404, "Meeting not found");
+  return meeting;
+};
+
+export const deleteMeetingService = async (id, companyId) => {
+  const filter = companyId ? { _id: id, companyId } : { _id: id };
+  const meeting = await Meeting.findOneAndDelete(filter);
+  if (!meeting) throw new ApiError(404, "Meeting not found");
+  return meeting;
+};

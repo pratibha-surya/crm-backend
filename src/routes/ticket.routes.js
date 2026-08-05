@@ -4,7 +4,10 @@ import {
   getTicketById,
   createTicket,
   updateTicket,
-  resolveTicket
+  resolveTicket,
+  closeTicket,
+  addTicketReply,
+  addTicketAttachment
 } from "../controllers/ticket.controller.js";
 import { validateTicketPayload } from "../validators/module.validators.js";
 import { protect } from "../middlewares/auth.middleware.js";
@@ -18,7 +21,7 @@ router.use(protect);
  * @swagger
  * tags:
  *   name: 13. Support Tickets
- *   description: Create, assign, update and resolve customer support tickets
+ *   description: Create, assign, update, close, and reply to customer support tickets (Module 13)
  */
 
 /**
@@ -33,11 +36,7 @@ router.use(protect);
  *       200:
  *         description: Tickets fetched successfully
  */
-router.get(
-  "/",
-  checkPermission("tickets", "read"),
-  getTickets
-);
+router.get("/", checkPermission("tickets", "read"), getTickets);
 
 /**
  * @swagger
@@ -56,7 +55,7 @@ router.get(
  *             required:
  *               - subject
  *               - description
- *               - customer
+ *               - customerId
  *             properties:
  *               subject:
  *                 type: string
@@ -64,32 +63,21 @@ router.get(
  *               description:
  *                 type: string
  *                 example: Unable to login into CRM.
- *               customer:
+ *               customerId:
  *                 type: string
  *                 example: 6890e0cf4baf761d12f76f8e
  *               priority:
  *                 type: string
- *                 enum:
- *                   - LOW
- *                   - MEDIUM
- *                   - HIGH
- *                   - URGENT
+ *                 enum: [LOW, MEDIUM, HIGH, URGENT]
  *                 example: HIGH
- *               assignedEmployee:
+ *               assignedTo:
  *                 type: string
  *                 example: 6890e0cf4baf761d12f76f8e
  *     responses:
  *       201:
  *         description: Ticket created successfully
- *       400:
- *         description: Validation error
  */
-router.post(
-  "/",
-  checkPermission("tickets", "create"),
-  validateTicketPayload,
-  createTicket
-);
+router.post("/", checkPermission("tickets", "create"), validateTicketPayload, createTicket);
 
 /**
  * @swagger
@@ -108,20 +96,14 @@ router.post(
  *     responses:
  *       200:
  *         description: Ticket fetched successfully
- *       404:
- *         description: Ticket not found
  */
-router.get(
-  "/:id",
-  checkPermission("tickets", "read"),
-  getTicketById
-);
+router.get("/:id", checkPermission("tickets", "read"), getTicketById);
 
 /**
  * @swagger
  * /tickets/{id}:
  *   put:
- *     summary: Update support ticket
+ *     summary: Update support ticket details
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -144,30 +126,17 @@ router.get(
  *                 type: string
  *               priority:
  *                 type: string
- *                 enum:
- *                   - LOW
- *                   - MEDIUM
- *                   - HIGH
- *                   - URGENT
+ *                 enum: [LOW, MEDIUM, HIGH, URGENT]
  *               status:
  *                 type: string
- *                 enum:
- *                   - OPEN
- *                   - IN_PROGRESS
- *                   - WAITING_FOR_CUSTOMER
- *                   - RESOLVED
- *                   - CLOSED
- *               assignedEmployee:
+ *                 enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+ *               assignedTo:
  *                 type: string
  *     responses:
  *       200:
  *         description: Ticket updated successfully
  */
-router.put(
-  "/:id",
-  checkPermission("tickets", "update"),
-  updateTicket
-);
+router.put("/:id", checkPermission("tickets", "update"), updateTicket);
 
 /**
  * @swagger
@@ -186,13 +155,95 @@ router.put(
  *     responses:
  *       200:
  *         description: Ticket resolved successfully
- *       404:
- *         description: Ticket not found
  */
-router.patch(
-  "/:id/resolve",
-  checkPermission("tickets", "resolve"),
-  resolveTicket
-);
+router.patch("/:id/resolve", checkPermission("tickets", "resolve"), resolveTicket);
+
+/**
+ * @swagger
+ * /tickets/{id}/close:
+ *   patch:
+ *     summary: Close support ticket
+ *     tags: [13. Support Tickets]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Ticket closed successfully
+ */
+router.patch("/:id/close", checkPermission("tickets", "resolve"), closeTicket);
+
+/**
+ * @swagger
+ * /tickets/{id}/replies:
+ *   post:
+ *     summary: Submit a reply to a support ticket
+ *     tags: [13. Support Tickets]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - text
+ *             properties:
+ *               text:
+ *                 type: string
+ *                 example: Hello, please try resetting your browser cookies and check again.
+ *     responses:
+ *       200:
+ *         description: Reply added successfully
+ */
+router.post("/:id/replies", checkPermission("tickets", "update"), addTicketReply);
+
+/**
+ * @swagger
+ * /tickets/{id}/attachments:
+ *   post:
+ *     summary: Add an attachment to a support ticket
+ *     tags: [13. Support Tickets]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - url
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: error_screenshot.png
+ *               url:
+ *                 type: string
+ *                 example: https://res.cloudinary.com/support/image/upload/err.png
+ *     responses:
+ *       200:
+ *         description: Attachment added successfully
+ */
+router.post("/:id/attachments", checkPermission("tickets", "update"), addTicketAttachment);
 
 export default router;

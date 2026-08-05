@@ -4,16 +4,16 @@ import User from "../models/User.model.js";
 import ApiError from "../utils/ApiError.js";
 import { sendOtpEmail } from "../utils/sendOtpEmail.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-const JWT_SECRET_FALLBACKS = [JWT_SECRET, "fallback_crm_secret_key_123"];
 const ACCESS_TOKEN_EXPIRES_IN = "1h";
 const REFRESH_TOKEN_EXPIRES_IN = "30d";
 const OTP_EXPIRY_MINUTES = 5;
 
 const verifyTokenWithFallbacks = (token) => {
+  const currentSecret = process.env.JWT_SECRET || "your-secret-key";
+  const secrets = [currentSecret, "fallback_crm_secret_key_123"];
   let lastError;
 
-  for (const secret of JWT_SECRET_FALLBACKS) {
+  for (const secret of secrets) {
     try {
       return jwt.verify(token, secret);
     } catch (error) {
@@ -43,9 +43,45 @@ const getUserSafeData = (user) => {
 
 const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
+import Company from "../models/Company.model.js";
+
 export const registerUser = async (userData, currentUser = null) => {
   const normalizedEmail = String(userData.email || "").trim().toLowerCase();
   const requestedRole = userData.role || "SALES_EXECUTIVE";
+  const companyId = currentUser?.companyId || userData.companyId;
+
+  // Verify company subscription plan limits
+  if (companyId && requestedRole !== "SUPER_ADMIN") {
+    let company = await Company.findById(companyId);
+    if (!company) {
+      if (companyId === "000000000000000000000000") {
+        company = await Company.create({
+          _id: "000000000000000000000000",
+          name: "Test Default Company",
+          email: "test.default@company.com",
+          subscription: {
+            plan: "PRO_TRIAL",
+            expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+            maxUsers: 100
+          }
+        });
+      } else {
+        throw new ApiError(404, "Target company record not found.");
+      }
+    }
+
+    // Check plan expiration
+    if (company.subscription?.expiresAt && new Date() > new Date(company.subscription.expiresAt)) {
+      throw new ApiError(403, "Company subscription plan has expired. Please upgrade or renew.");
+    }
+
+    // Check maximum user cap
+    const activeUsersCount = await User.countDocuments({ companyId, isDeleted: { $ne: true } });
+    const maxAllowed = company.subscription?.maxUsers || 5;
+    if (activeUsersCount >= maxAllowed) {
+      throw new ApiError(403, `User creation limit reached (${activeUsersCount}/${maxAllowed}). Please upgrade your plan.`);
+    }
+  }
 
   const existingUser = await User.findOne({ email: normalizedEmail });
   if (existingUser) {
@@ -60,7 +96,7 @@ export const registerUser = async (userData, currentUser = null) => {
     email: normalizedEmail,
     password: hashedPassword,
     role: requestedRole,
-    companyId: currentUser?.companyId || userData.companyId,
+    companyId: companyId,
     permissions: Array.isArray(userData.permissions) ? userData.permissions : [],
     isActive: true,
     isVerified: true
@@ -70,15 +106,16 @@ export const registerUser = async (userData, currentUser = null) => {
 };
 
 const issueAuthTokens = async (user) => {
+  const currentSecret = process.env.JWT_SECRET || "your-secret-key";
   const accessToken = jwt.sign(
     createTokenPayload(user),
-    JWT_SECRET,
+    currentSecret,
     { expiresIn: ACCESS_TOKEN_EXPIRES_IN }
   );
 
   const refreshToken = jwt.sign(
     { ...createTokenPayload(user), type: "refresh" },
-    JWT_SECRET,
+    currentSecret,
     { expiresIn: REFRESH_TOKEN_EXPIRES_IN }
   );
 

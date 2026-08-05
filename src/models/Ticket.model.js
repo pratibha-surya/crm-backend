@@ -11,7 +11,21 @@ const ticketSchema = new Schema(
     description: { type: String, required: true },
     priority: { type: String, enum: ["LOW", "MEDIUM", "HIGH", "URGENT"], default: "MEDIUM" },
     status: { type: String, enum: ["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"], default: "OPEN", index: true },
-    assignedTo: { type: Schema.Types.ObjectId, ref: "User", index: true }
+    assignedTo: { type: Schema.Types.ObjectId, ref: "User", index: true },
+    replies: [
+      {
+        userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        authorName: String,
+        text: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now }
+      }
+    ],
+    attachments: [
+      {
+        name: String,
+        url: String
+      }
+    ]
   },
   { timestamps: true }
 );

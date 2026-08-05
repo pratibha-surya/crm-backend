@@ -56,3 +56,34 @@ export const resolveTicketService = async (ticketId, companyId, resolvedBy) => {
 
   return ticket;
 };
+
+export const closeTicketService = async (ticketId, companyId) => {
+  const filter = companyId ? { _id: ticketId, companyId } : { _id: ticketId };
+  const ticket = await Ticket.findOneAndUpdate(
+    filter,
+    { status: "CLOSED" },
+    { new: true, runValidators: true }
+  );
+  if (!ticket) throw new ApiError(404, "Ticket not found");
+  return ticket;
+};
+
+export const addTicketReplyService = async (ticketId, replyData, companyId) => {
+  const filter = companyId ? { _id: ticketId, companyId } : { _id: ticketId };
+  const ticket = await Ticket.findOne(filter);
+  if (!ticket) throw new ApiError(404, "Ticket not found");
+
+  ticket.replies.push(replyData);
+  await ticket.save();
+  return ticket;
+};
+
+export const addTicketAttachmentService = async (ticketId, attachmentData, companyId) => {
+  const filter = companyId ? { _id: ticketId, companyId } : { _id: ticketId };
+  const ticket = await Ticket.findOne(filter);
+  if (!ticket) throw new ApiError(404, "Ticket not found");
+
+  ticket.attachments.push(attachmentData);
+  await ticket.save();
+  return ticket;
+};

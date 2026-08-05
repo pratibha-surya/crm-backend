@@ -8,6 +8,7 @@ import {
   logoutUser,
   getCurrentUserService
 } from "../services/auth.service.js";
+import { logActionService } from "../services/auditLog.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
@@ -34,6 +35,18 @@ const setAuthCookies = (res, accessToken, refreshToken, rememberMe = false) => {
 
 export const handleRegister = asyncHandler(async (req, res) => {
   const user = await registerUser(req.body, req.user);
+
+  // Write audit log
+  await logActionService(
+    user.companyId || null,
+    user._id,
+    "REGISTER",
+    "Authentication",
+    `New account registered: ${user.email} (${user.role})`,
+    req.ip,
+    req.headers["user-agent"]
+  );
+
   return res
     .status(201)
     .json(new ApiResponse(201, user, "User registered successfully"));
@@ -48,6 +61,17 @@ export const handleLogin = asyncHandler(async (req, res) => {
   const { user, accessToken, refreshToken } = await loginUser(email, password, rememberMe);
 
   setAuthCookies(res, accessToken, refreshToken, rememberMe);
+
+  // Write audit log
+  await logActionService(
+    user.companyId || null,
+    user._id,
+    "LOGIN",
+    "Authentication",
+    `User logged in successfully: ${user.email}`,
+    req.ip,
+    req.headers["user-agent"]
+  );
 
   return res
     .status(200)
@@ -110,6 +134,18 @@ export const handleResetPassword = asyncHandler(async (req, res) => {
 
 export const handleLogout = asyncHandler(async (req, res) => {
   const payload = await logoutUser(req.user._id);
+
+  // Write audit log
+  await logActionService(
+    req.user.companyId || null,
+    req.user._id,
+    "LOGOUT",
+    "Authentication",
+    `User logged out successfully: ${req.user.email}`,
+    req.ip,
+    req.headers["user-agent"]
+  );
+
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
 

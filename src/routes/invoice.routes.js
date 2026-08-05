@@ -14,7 +14,7 @@ router.use(protect);
 /**
  * @swagger
  * tags:
- *   name: 10. Invoices
+ *   name: 10. Invoice
  *   description: Manage billing, GST, and payment status for customers
  */
 
@@ -23,7 +23,7 @@ router.use(protect);
  * /invoices:
  *   get:
  *     summary: Get all invoices
- *     tags: [10. Invoices]
+ *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -37,7 +37,7 @@ router.get("/", checkPermission("invoices", "read"), getInvoices);
  * /invoices:
  *   post:
  *     summary: Create a new invoice
- *     tags: [10. Invoices]
+ *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -108,7 +108,7 @@ router.post("/", checkPermission("invoices", "create"), createInvoice);
  * /invoices/{id}/payment:
  *   patch:
  *     summary: Update payment status
- *     tags: [10. Invoices]
+ *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
  *     parameters:

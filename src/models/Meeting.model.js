@@ -16,6 +16,8 @@ const meetingSchema = new Schema(
     attendees: [{ email: String, name: String }],
     minutesOfMeeting: String,
     organizer: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    reminderMinutesBefore: { type: Number, default: 15 },
+    reminderSent: { type: Boolean, default: false },
     status: { type: String, enum: ["SCHEDULED", "COMPLETED", "CANCELLED"], default: "SCHEDULED" }
   },
   { timestamps: true }

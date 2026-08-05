@@ -10,6 +10,19 @@ const userSchema = new Schema(
     phone: { type: String, unique: true, sparse: true, trim: true },
     password: { type: String, required: true, select: false },
     companyId: { type: Schema.Types.ObjectId, ref: "Company", index: true },
+    branchId: { type: Schema.Types.ObjectId, ref: "Branch", index: true },
+    departmentId: { type: Schema.Types.ObjectId, ref: "Department", index: true },
+    designationId: { type: Schema.Types.ObjectId, ref: "Designation", index: true },
+    employeeCode: { type: String, unique: true, sparse: true, trim: true },
+    profileImage: { type: String, default: "" },
+    documents: [
+      {
+        name: { type: String, required: true },
+        url: { type: String, required: true }
+      }
+    ],
+    joiningDate: { type: Date },
+    salary: { type: Number, default: 0 },
     permissions: [{ type: String }],
     role: {
       type: String,

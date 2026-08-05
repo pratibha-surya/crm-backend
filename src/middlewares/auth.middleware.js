@@ -3,13 +3,12 @@ import User from "../models/User.model.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-const JWT_SECRET_FALLBACKS = [JWT_SECRET, "fallback_crm_secret_key_123"];
-
 const verifyTokenWithFallbacks = (token) => {
+  const currentSecret = process.env.JWT_SECRET || "your-secret-key";
+  const secrets = [currentSecret, "fallback_crm_secret_key_123"];
   let lastError;
 
-  for (const secret of JWT_SECRET_FALLBACKS) {
+  for (const secret of secrets) {
     try {
       return jwt.verify(token, secret);
     } catch (error) {
@@ -25,7 +24,7 @@ export const protect = asyncHandler(async (req, res, next) => {
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    /^bearer\s/i.test(req.headers.authorization)
   ) {
     token = req.headers.authorization.split(" ")[1];
   } else if (req.cookies?.accessToken) {
@@ -61,7 +60,7 @@ export const optionalProtect = asyncHandler(async (req, res, next) => {
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    /^bearer\s/i.test(req.headers.authorization)
   ) {
     token = req.headers.authorization.split(" ")[1];
   } else if (req.cookies?.accessToken) {

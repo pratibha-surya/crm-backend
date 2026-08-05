@@ -16,7 +16,7 @@ router.use(protect);
 /**
  * @swagger
  * tags:
- *   name: User Management
+ *   name: 03. User Management
  *   description: Employee CRUD & User account management (Requires authentication & permission)
  */
 
@@ -25,7 +25,7 @@ router.use(protect);
  * /users:
  *   get:
  *     summary: List all users/employees
- *     tags: [User Management]
+ *     tags: [03. User Management]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -41,7 +41,7 @@ router.get("/", checkPermission("users", "read"), getUsers);
  * /users:
  *   post:
  *     summary: Create new employee account with specified role
- *     tags: [User Management]
+ *     tags: [03. User Management]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -85,7 +85,7 @@ router.post("/", checkPermission("users", "create"), createUser);
  * /users/{id}:
  *   get:
  *     summary: Get single user details
- *     tags: [User Management]
+ *     tags: [03. User Management]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -105,7 +105,7 @@ router.get("/:id", checkPermission("users", "read"), getUserById);
  * /users/{id}:
  *   put:
  *     summary: Update user details
- *     tags: [User Management]
+ *     tags: [03. User Management]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -125,7 +125,7 @@ router.put("/:id", checkPermission("users", "update"), updateUser);
  * /users/{id}:
  *   delete:
  *     summary: Soft delete user record
- *     tags: [User Management]
+ *     tags: [03. User Management]
  *     security:
  *       - bearerAuth: []
  *     parameters:
