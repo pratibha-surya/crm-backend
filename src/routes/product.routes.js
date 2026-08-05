@@ -75,6 +75,7 @@ router.get(
  * /products:
  *   post:
  *     summary: Create a new product
+ *     description: Creates a new product for the authenticated company. The companyId is automatically taken from the logged-in user.
  *     tags: [Products]
  *     security:
  *       - bearerAuth: []
@@ -89,9 +90,6 @@ router.get(
  *               - sku
  *               - price
  *             properties:
- *               companyId:
- *                 type: string
- *                 example: 64f8c9d2e4b0a123456789ab
  *               name:
  *                 type: string
  *                 example: HP Laptop
@@ -118,12 +116,16 @@ router.get(
  *         description: Product created successfully
  *       400:
  *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
  */
 router.post(
   "/",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN"),
   validateProductPayload,
-  createProduct
+ createProduct
 );
 
 export default router;
