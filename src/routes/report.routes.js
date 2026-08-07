@@ -27,13 +27,59 @@ router.use(protect);
  * /reports/overview:
  *   get:
  *     summary: Get overall metrics overview
+ *     description: "Execute operations matching capabilities."
  *     tags: [17. Reports]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Overview fetched successfully
- */
+ *         description: "Overview fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Overview fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/overview", checkPermission("reports", "read"), getReportsOverview);
 
 /**
@@ -41,13 +87,59 @@ router.get("/overview", checkPermission("reports", "read"), getReportsOverview);
  * /reports/sales:
  *   get:
  *     summary: Get sales revenue summary report
+ *     description: "Execute operations matching capabilities."
  *     tags: [17. Reports]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Sales report fetched successfully
- */
+ *         description: "Sales report fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Sales report fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/sales", checkPermission("reports", "read"), getSalesReport);
 
 /**
@@ -55,13 +147,59 @@ router.get("/sales", checkPermission("reports", "read"), getSalesReport);
  * /reports/revenue:
  *   get:
  *     summary: Get detailed payments revenue report
+ *     description: "Execute operations matching capabilities."
  *     tags: [17. Reports]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Revenue report fetched successfully
- */
+ *         description: "Revenue report fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Revenue report fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/revenue", checkPermission("reports", "read"), getRevenueReport);
 
 /**
@@ -69,13 +207,59 @@ router.get("/revenue", checkPermission("reports", "read"), getRevenueReport);
  * /reports/employee:
  *   get:
  *     summary: Get employee engagement and logins report
+ *     description: "Execute operations matching capabilities."
  *     tags: [17. Reports]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Employee report fetched successfully
- */
+ *         description: "Employee report fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Employee report fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/employee", checkPermission("reports", "read"), getEmployeeReport);
 
 /**
@@ -83,13 +267,59 @@ router.get("/employee", checkPermission("reports", "read"), getEmployeeReport);
  * /reports/customer:
  *   get:
  *     summary: Get customer database listing report
+ *     description: "Execute operations matching capabilities."
  *     tags: [17. Reports]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Customer report fetched successfully
- */
+ *         description: "Customer report fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Customer report fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/customer", checkPermission("reports", "read"), getCustomerReport);
 
 /**
@@ -97,13 +327,59 @@ router.get("/customer", checkPermission("reports", "read"), getCustomerReport);
  * /reports/conversion:
  *   get:
  *     summary: Get lead win/loss conversion rates report
+ *     description: "Execute operations matching capabilities."
  *     tags: [17. Reports]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Conversion report fetched successfully
- */
+ *         description: "Conversion report fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Conversion report fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/conversion", checkPermission("reports", "read"), getLeadConversionReport);
 
 /**
@@ -124,8 +400,53 @@ router.get("/conversion", checkPermission("reports", "read"), getLeadConversionR
  *         description: The type of report to export to CSV
  *     responses:
  *       200:
- *         description: CSV file download containing requested report data
- */
+ *         description: "CSV file download containing requested report data"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "CSV file download containing requested report data"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/export", checkPermission("reports", "read"), exportReportCSV);
 
 export default router;

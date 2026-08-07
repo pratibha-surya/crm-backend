@@ -1,7 +1,7 @@
 import ApiError from "../utils/ApiError.js";
 import Role from "../models/Role.model.js";
 
-const DEFAULT_ROLE_PERMISSIONS = {
+export const DEFAULT_ROLE_PERMISSIONS = {
   SALES_MANAGER: [
     "customers:read",
     "customers:create",
@@ -34,7 +34,8 @@ const DEFAULT_ROLE_PERMISSIONS = {
     "tickets:create",
     "tickets:read",
     "tickets:resolve",
-    "tasks:read"
+    "tasks:read",
+    "leads:read"
   ],
   ACCOUNTANT: [
     "invoices:read",
@@ -72,15 +73,6 @@ export const checkPermission = (moduleName, action) => {
 
       const fallbackPermissions = DEFAULT_ROLE_PERMISSIONS[req.user.role] || [];
       if (fallbackPermissions.includes(requiredPermission)) {
-        return next();
-      }
-
-      const roleFilter = req.user.companyId
-        ? { code: req.user.role, companyId: req.user.companyId }
-        : { code: req.user.role, isSystemDefault: true };
-
-      const roleDoc = await Role.findOne(roleFilter);
-      if (roleDoc?.permissions?.includes(requiredPermission)) {
         return next();
       }
 

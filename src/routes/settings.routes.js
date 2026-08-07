@@ -19,6 +19,7 @@ router.use(protect);
  * /settings:
  *   get:
  *     summary: Get company settings
+ *     description: "Execute operations matching capabilities."
  *     tags: [19. Settings]
  *     security:
  *       - bearerAuth: []
@@ -60,7 +61,38 @@ router.use(protect);
  *                 theme:
  *                   type: string
  *                   example: light
- */
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get(
   "/",
   checkPermission("settings", "read"),
@@ -72,6 +104,7 @@ router.get(
  * /settings:
  *   put:
  *     summary: Update company settings
+ *     description: "Modify fields of the specified record matching the path parameter ID with the payload data."
  *     tags: [19. Settings]
  *     security:
  *       - bearerAuth: []

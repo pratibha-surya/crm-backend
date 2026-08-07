@@ -25,13 +25,59 @@ router.use(protect);
  * /followups:
  *   get:
  *     summary: Get all lead follow-up schedules
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [05. Lead Management]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Followups list fetched successfully
- */
+ *         description: "Followups list fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Followups list fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get(
   "/",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"),
@@ -43,6 +89,7 @@ router.get(
  * /followups:
  *   post:
  *     summary: Create/Schedule a lead follow-up task
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [05. Lead Management]
  *     security:
  *       - bearerAuth: []
@@ -80,8 +127,53 @@ router.get(
  *                 example: Phone Call
  *     responses:
  *       201:
- *         description: Followup task created successfully
- */
+ *         description: "Followup task created successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Followup task created successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post(
   "/",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"),
@@ -94,6 +186,7 @@ router.post(
  * /followups/{id}/status:
  *   patch:
  *     summary: Update follow-up task status
+ *     description: "Modify fields of the specified record matching the path parameter ID with the payload data."
  *     tags: [05. Lead Management]
  *     security:
  *       - bearerAuth: []
@@ -118,8 +211,53 @@ router.post(
  *                 example: completed
  *     responses:
  *       200:
- *         description: Followup status updated successfully
- */
+ *         description: "Followup status updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Followup status updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.patch(
   "/:id/status",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"),
@@ -131,6 +269,7 @@ router.patch(
  * /followups/{id}:
  *   delete:
  *     summary: Delete a follow-up task
+ *     description: "Permanently delete the record matching the path parameter ID from the database."
  *     tags: [05. Lead Management]
  *     security:
  *       - bearerAuth: []
@@ -142,8 +281,53 @@ router.patch(
  *           type: string
  *     responses:
  *       200:
- *         description: Followup task deleted successfully
- */
+ *         description: "Followup task deleted successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Followup task deleted successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.delete(
   "/:id",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER"),

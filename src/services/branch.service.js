@@ -2,9 +2,34 @@ import Branch from "../models/Branch.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getBranchesService = async (query = {}, companyId) => {
-  const filter = { ...query };
+  const { page = 1, limit = 10, search = "" } = query;
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  const filter = {};
   if (companyId) filter.companyId = companyId;
-  return await Branch.find(filter).sort({ name: 1 });
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { code: { $regex: search, $options: "i" } }
+    ];
+  }
+
+  const [branches, total] = await Promise.all([
+    Branch.find(filter).sort({ name: 1 }).skip(skip).limit(limitNum),
+    Branch.countDocuments(filter)
+  ]);
+
+  return {
+    branches,
+    pagination: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum)
+    }
+  };
 };
 
 export const getBranchByIdService = async (id, companyId) => {
@@ -15,6 +40,10 @@ export const getBranchByIdService = async (id, companyId) => {
 };
 
 export const createBranchService = async (data) => {
+  const existingBranch = await Branch.findOne({ companyId: data.companyId, code: data.code });
+  if (existingBranch) {
+    throw new ApiError(409, "Branch with this code already exists in your company");
+  }
   return await Branch.create(data);
 };
 

@@ -25,8 +25,53 @@ router.use(protect);
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Consolidated calendar events fetched successfully
- */
+ *         description: "Consolidated calendar events fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Consolidated calendar events fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get(
   "/",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE", "ACCOUNTANT", "CUSTOMER_SUPPORT"),

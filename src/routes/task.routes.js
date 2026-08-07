@@ -29,13 +29,59 @@ router.use(protect);
  * /tasks:
  *   get:
  *     summary: Get all tasks
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Tasks retrieved successfully
- */
+ *         description: "Tasks retrieved successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Tasks retrieved successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"), getTasks);
 
 /**
@@ -43,6 +89,7 @@ router.get("/", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", 
  * /tasks/{id}:
  *   get:
  *     summary: Get task details by ID
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
@@ -54,8 +101,53 @@ router.get("/", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", 
  *           type: string
  *     responses:
  *       200:
- *         description: Task details retrieved successfully
- */
+ *         description: "Task details retrieved successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Task details retrieved successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"), getTaskById);
 
 /**
@@ -63,6 +155,7 @@ router.get("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER
  * /tasks:
  *   post:
  *     summary: Create a new task
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
@@ -93,6 +186,10 @@ router.get("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER
  *               assignedTo:
  *                 type: string
  *                 example: 64f8c9d2e4b0a123456789ab
+ *               leadId:
+ *                 type: string
+ *                 description: "Optional reference to a Lead ID"
+ *                 example: 6a7317425f731cb0b3762088
  *               isRecurring:
  *                 type: boolean
  *                 example: false
@@ -109,8 +206,53 @@ router.get("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER
  *                     example: 2026-10-27T10:00:00Z
  *     responses:
  *       201:
- *         description: Task created successfully
- */
+ *         description: "Task created successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Task created successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER"), validateTaskPayload, createTask);
 
 /**
@@ -118,6 +260,7 @@ router.post("/", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER")
  * /tasks/{id}:
  *   put:
  *     summary: Update an existing task
+ *     description: "Modify fields of the specified record matching the path parameter ID with the payload data."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
@@ -148,10 +291,59 @@ router.post("/", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER")
  *                 type: string
  *                 enum: [PENDING, IN_PROGRESS, COMPLETED, CANCELLED]
  *                 example: IN_PROGRESS
+ *               leadId:
+ *                 type: string
+ *                 description: "Optional reference to a Lead ID"
+ *                 example: 6a7317425f731cb0b3762088
  *     responses:
  *       200:
- *         description: Task updated successfully
- */
+ *         description: "Task updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Task updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.put("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER"), updateTask);
 
 /**
@@ -159,6 +351,7 @@ router.put("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER
  * /tasks/{id}:
  *   delete:
  *     summary: Delete a task
+ *     description: "Permanently delete the record matching the path parameter ID from the database."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
@@ -170,8 +363,53 @@ router.put("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER
  *           type: string
  *     responses:
  *       200:
- *         description: Task deleted successfully
- */
+ *         description: "Task deleted successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Task deleted successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.delete("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN"), deleteTask);
 
 /**
@@ -179,6 +417,7 @@ router.delete("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN"), deleteTask
  * /tasks/{id}/status:
  *   patch:
  *     summary: Update task status
+ *     description: "Modify fields of the specified record matching the path parameter ID with the payload data."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
@@ -202,8 +441,53 @@ router.delete("/:id", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN"), deleteTask
  *                 example: COMPLETED
  *     responses:
  *       200:
- *         description: Task status updated successfully
- */
+ *         description: "Task status updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Task status updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.patch("/:id/status", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"), updateTaskStatus);
 
 /**
@@ -211,6 +495,7 @@ router.patch("/:id/status", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALE
  * /tasks/{id}/comments:
  *   post:
  *     summary: Add a comment to a task
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
@@ -234,8 +519,53 @@ router.patch("/:id/status", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALE
  *                 example: I am working on this task now, will finish by evening.
  *     responses:
  *       200:
- *         description: Comment added successfully
- */
+ *         description: "Comment added successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Comment added successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/:id/comments", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"), addTaskComment);
 
 /**
@@ -243,6 +573,7 @@ router.post("/:id/comments", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SAL
  * /tasks/{id}/attachments:
  *   post:
  *     summary: Add an attachment to a task
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [08. Task Management]
  *     security:
  *       - bearerAuth: []
@@ -270,8 +601,53 @@ router.post("/:id/comments", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SAL
  *                 example: https://res.cloudinary.com/crm/image/upload/spec.pdf
  *     responses:
  *       200:
- *         description: Attachment added successfully
- */
+ *         description: "Attachment added successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Attachment added successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/:id/attachments", authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE"), addTaskAttachment);
 
 export default router;

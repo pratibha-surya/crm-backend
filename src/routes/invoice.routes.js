@@ -23,13 +23,59 @@ router.use(protect);
  * /invoices:
  *   get:
  *     summary: Get all invoices
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Invoices retrieved successfully
- */
+ *         description: "Invoices retrieved successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Invoices retrieved successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/", checkPermission("invoices", "read"), getInvoices);
 
 /**
@@ -99,8 +145,53 @@ router.get("/", checkPermission("invoices", "read"), getInvoices);
  *                 example: 2026-11-30
  *     responses:
  *       201:
- *         description: Invoice created successfully
- */
+ *         description: "Invoice created successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Invoice created successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/", checkPermission("invoices", "create"), createInvoice);
 
 /**
@@ -108,6 +199,7 @@ router.post("/", checkPermission("invoices", "create"), createInvoice);
  * /invoices/{id}/payment:
  *   patch:
  *     summary: Update payment status
+ *     description: "Modify fields of the specified record matching the path parameter ID with the payload data."
  *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
@@ -132,8 +224,53 @@ router.post("/", checkPermission("invoices", "create"), createInvoice);
  *                 example: PAID
  *     responses:
  *       200:
- *         description: Invoice payment status updated successfully
- */
+ *         description: "Invoice payment status updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Invoice payment status updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.patch("/:id/payment", checkPermission("invoices", "update"), updatePaymentStatus);
 
 export default router;

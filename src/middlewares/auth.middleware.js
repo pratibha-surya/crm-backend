@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
+import Role from "../models/Role.model.js";
+import { DEFAULT_ROLE_PERMISSIONS } from "./permission.middleware.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -32,6 +34,7 @@ export const protect = asyncHandler(async (req, res, next) => {
   }
 
   if (!token) {
+    console.log("token")
     throw new ApiError(401, "Not authorized to access this route");
   }
 
@@ -42,16 +45,28 @@ export const protect = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, "Invalid or expired access token. Please login again.");
   }
 
-  const currentUser = await User.findById(decoded.id).select("-password");
-
-  if (!currentUser || !currentUser.isActive || currentUser.isDeleted) {
-    throw new ApiError(
-      401,
-      "The user belonging to this token no longer exists or is inactive."
-    );
+  let permissions = decoded.permissions || [];
+  try {
+    // Look up dynamic role config from DB
+    const dbRole = await Role.findOne({ code: decoded.role, companyId: decoded.companyId });
+    if (dbRole && Array.isArray(dbRole.permissions)) {
+      permissions = [...new Set([...permissions, ...dbRole.permissions])];
+    } else {
+      const fallback = DEFAULT_ROLE_PERMISSIONS[decoded.role] || [];
+      permissions = [...new Set([...permissions, ...fallback])];
+    }
+  } catch (err) {
+    console.error("Error fetching dynamic permissions in protect middleware:", err);
   }
 
-  req.user = currentUser;
+  req.user = {
+    _id: decoded.id,
+    id: decoded.id,
+    role: decoded.role,
+    email: decoded.email,
+    companyId: decoded.companyId,
+    permissions
+  };
   next();
 });
 

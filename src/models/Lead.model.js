@@ -23,6 +23,7 @@ const leadSchema = new Schema(
     },
     leadScore: { type: Number, default: 0 },
     assignedTo: { type: Schema.Types.ObjectId, ref: "User", index: true },
+    assignedBy: { type: Schema.Types.ObjectId, ref: "User" },
     notes: [
       {
         text: { type: String, required: true },

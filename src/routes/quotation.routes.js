@@ -23,13 +23,59 @@ router.use(protect);
  * /quotations:
  *   get:
  *     summary: Get all quotations
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [09. Quotations]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Quotations retrieved successfully
- */
+ *         description: "Quotations retrieved successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Quotations retrieved successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/", checkPermission("quotations", "read"), getQuotations);
 
 /**
@@ -37,6 +83,7 @@ router.get("/", checkPermission("quotations", "read"), getQuotations);
  * /quotations:
  *   post:
  *     summary: Create a new quotation
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [09. Quotations]
  *     security:
  *       - bearerAuth: []
@@ -95,8 +142,53 @@ router.get("/", checkPermission("quotations", "read"), getQuotations);
  *                 example: 2026-12-31
  *     responses:
  *       201:
- *         description: Quotation created successfully
- */
+ *         description: "Quotation created successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Quotation created successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/", checkPermission("quotations", "create"), createQuotation);
 
 /**
@@ -104,6 +196,7 @@ router.post("/", checkPermission("quotations", "create"), createQuotation);
  * /quotations/{id}/status:
  *   patch:
  *     summary: Update quotation status
+ *     description: "Modify fields of the specified record matching the path parameter ID with the payload data."
  *     tags: [09. Quotations]
  *     security:
  *       - bearerAuth: []
@@ -128,8 +221,53 @@ router.post("/", checkPermission("quotations", "create"), createQuotation);
  *                 example: SENT
  *     responses:
  *       200:
- *         description: Quotation status updated successfully
- */
+ *         description: "Quotation status updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Quotation status updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.patch("/:id/status", checkPermission("quotations", "update"), updateQuotationStatus);
 
 export default router;

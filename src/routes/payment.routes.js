@@ -25,13 +25,59 @@ router.use(protect);
  * /payments:
  *   get:
  *     summary: Get all payments
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Payments list fetched successfully
- */
+ *         description: "Payments list fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Payments list fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get(
   "/",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "ACCOUNTANT"),
@@ -43,6 +89,7 @@ router.get(
  * /payments/{id}:
  *   get:
  *     summary: Get payment details by ID
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
@@ -54,8 +101,53 @@ router.get(
  *           type: string
  *     responses:
  *       200:
- *         description: Payment details fetched successfully
- */
+ *         description: "Payment details fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Payment details fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get(
   "/:id",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "ACCOUNTANT"),
@@ -67,6 +159,7 @@ router.get(
  * /payments:
  *   post:
  *     summary: Record a payment transaction
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
@@ -106,8 +199,53 @@ router.get(
  *                 example: Paid in full via GPay.
  *     responses:
  *       201:
- *         description: Payment registered successfully
- */
+ *         description: "Payment registered successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Payment registered successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post(
   "/",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "ACCOUNTANT"),
@@ -120,6 +258,7 @@ router.post(
  * /payments/{id}:
  *   delete:
  *     summary: Remove/Delete a payment transaction
+ *     description: "Execute operations matching capabilities."
  *     tags: [10. Invoice]
  *     security:
  *       - bearerAuth: []
@@ -131,8 +270,53 @@ router.post(
  *           type: string
  *     responses:
  *       200:
- *         description: Payment record deleted successfully
- */
+ *         description: "Payment record deleted successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Payment record deleted successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.delete(
   "/:id",
   authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN"),

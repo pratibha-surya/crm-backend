@@ -26,13 +26,59 @@ router.use(protect);
  * /customers:
  *   get:
  *     summary: Get all customers for the authenticated company
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [04. Customer Management]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Customers fetched successfully
- */
+ *         description: "Customers fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Customers fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/", checkPermission("customers", "read"), getCustomers);
 
 /**
@@ -40,6 +86,7 @@ router.get("/", checkPermission("customers", "read"), getCustomers);
  * /customers:
  *   post:
  *     summary: Create a new customer
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [04. Customer Management]
  *     security:
  *       - bearerAuth: []
@@ -95,8 +142,53 @@ router.get("/", checkPermission("customers", "read"), getCustomers);
  *                   zipCode: "400001"
  *     responses:
  *       201:
- *         description: Customer created successfully
- */
+ *         description: "Customer created successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Customer created successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/", checkPermission("customers", "create"), validateCustomerPayload, createCustomer);
 
 /**
@@ -104,6 +196,7 @@ router.post("/", checkPermission("customers", "create"), validateCustomerPayload
  * /customers/{id}:
  *   get:
  *     summary: Get customer by ID
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [04. Customer Management]
  *     security:
  *       - bearerAuth: []
@@ -115,8 +208,53 @@ router.post("/", checkPermission("customers", "create"), validateCustomerPayload
  *           type: string
  *     responses:
  *       200:
- *         description: Customer details fetched successfully
- */
+ *         description: "Customer details fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Customer details fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/:id", checkPermission("customers", "read"), getCustomerById);
 
 /**
@@ -124,6 +262,7 @@ router.get("/:id", checkPermission("customers", "read"), getCustomerById);
  * /customers/{id}:
  *   put:
  *     summary: Update customer details
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [04. Customer Management]
  *     security:
  *       - bearerAuth: []
@@ -135,8 +274,53 @@ router.get("/:id", checkPermission("customers", "read"), getCustomerById);
  *           type: string
  *     responses:
  *       200:
- *         description: Customer updated successfully
- */
+ *         description: "Customer updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Customer updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.put("/:id", checkPermission("customers", "update"), updateCustomer);
 
 /**
@@ -144,6 +328,7 @@ router.put("/:id", checkPermission("customers", "update"), updateCustomer);
  * /customers/{id}:
  *   delete:
  *     summary: Delete customer
+ *     description: "Permanently delete the record matching the path parameter ID from the database."
  *     tags: [04. Customer Management]
  *     security:
  *       - bearerAuth: []
@@ -155,8 +340,53 @@ router.put("/:id", checkPermission("customers", "update"), updateCustomer);
  *           type: string
  *     responses:
  *       200:
- *         description: Customer deleted successfully
- */
+ *         description: "Customer deleted successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Customer deleted successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.delete("/:id", checkPermission("customers", "delete"), deleteCustomer);
 
 export default router;

@@ -2,7 +2,34 @@ import Company from "../models/Company.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getCompaniesService = async (query = {}) => {
-  return await Company.find(query).sort({ createdAt: -1 });
+  const { page = 1, limit = 10, search = "", status } = query;
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  const filter = {};
+  if (status) filter["subscription.status"] = status;
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } }
+    ];
+  }
+
+  const [companies, total] = await Promise.all([
+    Company.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
+    Company.countDocuments(filter)
+  ]);
+
+  return {
+    companies,
+    pagination: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum)
+    }
+  };
 };
 
 export const getCompanyByIdService = async (companyId) => {
@@ -12,6 +39,10 @@ export const getCompanyByIdService = async (companyId) => {
 };
 
 export const createCompanyService = async (companyData) => {
+  const existingCompany = await Company.findOne({ email: companyData.email.toLowerCase() });
+  if (existingCompany) {
+    throw new ApiError(409, "Company with this email already exists");
+  }
   return await Company.create(companyData);
 };
 

@@ -11,6 +11,7 @@ const taskSchema = new Schema(
     deadline: Date,
     status: { type: String, enum: ["PENDING", "IN_PROGRESS", "COMPLETED", "CANCELLED"], default: "PENDING", index: true },
     assignedTo: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
     isRecurring: { type: Boolean, default: false },
     recurrence: {

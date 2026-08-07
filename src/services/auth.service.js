@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
+import Role from "../models/Role.model.js";
+import { DEFAULT_ROLE_PERMISSIONS } from "../middlewares/permission.middleware.js";
 import ApiError from "../utils/ApiError.js";
 import { sendOtpEmail } from "../utils/sendOtpEmail.js";
 
@@ -278,5 +280,21 @@ export const getCurrentUserService = async (userId) => {
   if (!user) {
     throw new ApiError(404, "User not found");
   }
-  return getUserSafeData(user);
+  const safeData = getUserSafeData(user);
+  let permissions = Array.isArray(user.permissions) ? user.permissions : [];
+
+  try {
+    const dbRole = await Role.findOne({ code: user.role, companyId: user.companyId });
+    if (dbRole && Array.isArray(dbRole.permissions)) {
+      permissions = [...new Set([...permissions, ...dbRole.permissions])];
+    } else {
+      const fallback = DEFAULT_ROLE_PERMISSIONS[user.role] || [];
+      permissions = [...new Set([...permissions, ...fallback])];
+    }
+  } catch (err) {
+    console.error("Error fetching dynamic permissions in getCurrentUserService:", err);
+  }
+
+  safeData.permissions = permissions;
+  return safeData;
 };

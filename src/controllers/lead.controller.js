@@ -13,12 +13,12 @@ import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getLeads = asyncHandler(async (req, res) => {
-  const leads = await getLeadsService(req.query, req.user?.companyId);
+  const leads = await getLeadsService(req.query, req.user?.companyId, req.user);
   return res.status(200).json(new ApiResponse(200, leads, "Leads fetched successfully"));
 });
 
 export const getLeadById = asyncHandler(async (req, res) => {
-  const lead = await getLeadByIdService(req.params.id, req.user?.companyId);
+  const lead = await getLeadByIdService(req.params.id, req.user?.companyId, req.user);
   return res.status(200).json(new ApiResponse(200, lead, "Lead details fetched successfully"));
 });
 
@@ -47,7 +47,7 @@ export const updateLeadStatus = asyncHandler(async (req, res) => {
 
   if (!status) throw new ApiError(400, "Lead status is required");
 
-  const updatedLead = await updateLeadStatusService(id, status, userName);
+  const updatedLead = await updateLeadStatusService(id, status, req.user?.companyId, req.user, userName);
   if (!updatedLead) throw new ApiError(404, "Lead not found");
 
   return res.status(200).json(new ApiResponse(200, updatedLead, "Lead status updated successfully"));
@@ -60,7 +60,7 @@ export const assignLead = asyncHandler(async (req, res) => {
 
   if (!userId) throw new ApiError(400, "User ID is required to assign lead");
 
-  const assignedLead = await assignLeadService(id, userId, userName);
+  const assignedLead = await assignLeadService(id, userId, userName, req.user?._id);
   if (!assignedLead) throw new ApiError(404, "Lead not found");
 
   return res.status(200).json(new ApiResponse(200, assignedLead, "Lead assigned successfully"));

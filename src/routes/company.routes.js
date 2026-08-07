@@ -25,13 +25,59 @@ router.use(protect);
  * /companies:
  *   get:
  *     summary: Get all companies
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [03. Company Management]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Companies fetched successfully
- */
+ *         description: "Companies fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Companies fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/", checkPermission("companies", "read"), getCompanies);
 
 /**
@@ -89,8 +135,53 @@ router.get("/", checkPermission("companies", "read"), getCompanies);
  *                   maxUsers: 50
  *     responses:
  *       201:
- *         description: Company created successfully
- */
+ *         description: "Company created successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Company created successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/", checkPermission("companies", "create"), createCompany);
 
 /**
@@ -98,6 +189,7 @@ router.post("/", checkPermission("companies", "create"), createCompany);
  * /companies/{id}:
  *   get:
  *     summary: Get company by ID
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [03. Company Management]
  *     security:
  *       - bearerAuth: []
@@ -109,8 +201,53 @@ router.post("/", checkPermission("companies", "create"), createCompany);
  *           type: string
  *     responses:
  *       200:
- *         description: Company details fetched successfully
- */
+ *         description: "Company details fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Company details fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/:id", checkPermission("companies", "read"), getCompanyById);
 
 /**
@@ -118,6 +255,7 @@ router.get("/:id", checkPermission("companies", "read"), getCompanyById);
  * /companies/{id}:
  *   put:
  *     summary: Update company details
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [03. Company Management]
  *     security:
  *       - bearerAuth: []
@@ -129,8 +267,53 @@ router.get("/:id", checkPermission("companies", "read"), getCompanyById);
  *           type: string
  *     responses:
  *       200:
- *         description: Company updated successfully
- */
+ *         description: "Company updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Company updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.put("/:id", checkPermission("companies", "update"), updateCompany);
 
 /**
@@ -138,6 +321,7 @@ router.put("/:id", checkPermission("companies", "update"), updateCompany);
  * /companies/{id}/subscription:
  *   patch:
  *     summary: Update company subscription plan
+ *     description: "Modify fields of the specified record matching the path parameter ID with the payload data."
  *     tags: [03. Company Management]
  *     security:
  *       - bearerAuth: []
@@ -149,8 +333,53 @@ router.put("/:id", checkPermission("companies", "update"), updateCompany);
  *           type: string
  *     responses:
  *       200:
- *         description: Company subscription updated successfully
- */
+ *         description: "Company subscription updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Company subscription updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.patch("/:id/subscription", checkPermission("companies", "update"), updateCompanySubscription);
 
 export default router;

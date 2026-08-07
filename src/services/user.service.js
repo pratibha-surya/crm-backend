@@ -18,7 +18,7 @@ export const getUserByIdService = async (userId) => {
 export const createUserService = async (userData) => {
   const existingUser = await User.findOne({ email: userData.email });
   if (existingUser) {
-    throw new ApiError(400, "User with this email already exists");
+    throw new ApiError(409, "User with this email already exists");
   }
   const user = await User.create(userData);
   const result = user.toObject();

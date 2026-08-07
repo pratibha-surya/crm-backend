@@ -15,6 +15,10 @@ export const getDesignationByIdService = async (id, companyId) => {
 };
 
 export const createDesignationService = async (data) => {
+  const existingDesignation = await Designation.findOne({ companyId: data.companyId, code: data.code });
+  if (existingDesignation) {
+    throw new ApiError(409, "Designation with this code already exists in your company");
+  }
   return await Designation.create(data);
 };
 

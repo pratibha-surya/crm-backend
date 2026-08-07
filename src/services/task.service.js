@@ -2,9 +2,40 @@ import Task from "../models/Task.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getTasksService = async (query = {}, companyId) => {
-  const filter = { ...query };
+  const { page = 1, limit = 10, search = "", status, priority } = query;
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  const filter = {};
   if (companyId) filter.companyId = companyId;
-  return await Task.find(filter).populate("assignedTo", "firstName lastName email").sort({ createdAt: -1 });
+  if (status) filter.status = status;
+  if (priority) filter.priority = priority;
+  if (search) {
+    filter.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } }
+    ];
+  }
+
+  const [tasks, total] = await Promise.all([
+    Task.find(filter)
+      .populate("assignedTo", "firstName lastName email")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limitNum),
+    Task.countDocuments(filter)
+  ]);
+
+  return {
+    tasks,
+    pagination: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum)
+    }
+  };
 };
 
 export const createTaskService = async (data) => {

@@ -29,13 +29,59 @@ router.use(protect);
  * /tickets:
  *   get:
  *     summary: Get all support tickets
+ *     description: "Retrieve a list of all records matching the authenticated context."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Tickets fetched successfully
- */
+ *         description: "Tickets fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Tickets fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/", checkPermission("tickets", "read"), getTickets);
 
 /**
@@ -43,6 +89,7 @@ router.get("/", checkPermission("tickets", "read"), getTickets);
  * /tickets:
  *   post:
  *     summary: Create a new support ticket
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -75,8 +122,53 @@ router.get("/", checkPermission("tickets", "read"), getTickets);
  *                 example: 6890e0cf4baf761d12f76f8e
  *     responses:
  *       201:
- *         description: Ticket created successfully
- */
+ *         description: "Ticket created successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket created successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/", checkPermission("tickets", "create"), validateTicketPayload, createTicket);
 
 /**
@@ -84,6 +176,7 @@ router.post("/", checkPermission("tickets", "create"), validateTicketPayload, cr
  * /tickets/{id}:
  *   get:
  *     summary: Get ticket by ID
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -95,8 +188,53 @@ router.post("/", checkPermission("tickets", "create"), validateTicketPayload, cr
  *           type: string
  *     responses:
  *       200:
- *         description: Ticket fetched successfully
- */
+ *         description: "Ticket fetched successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.get("/:id", checkPermission("tickets", "read"), getTicketById);
 
 /**
@@ -104,6 +242,7 @@ router.get("/:id", checkPermission("tickets", "read"), getTicketById);
  * /tickets/{id}:
  *   put:
  *     summary: Update support ticket details
+ *     description: "Retrieve detailed metadata for a single record matching the specified ID from path parameters."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -134,8 +273,53 @@ router.get("/:id", checkPermission("tickets", "read"), getTicketById);
  *                 type: string
  *     responses:
  *       200:
- *         description: Ticket updated successfully
- */
+ *         description: "Ticket updated successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket updated successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.put("/:id", checkPermission("tickets", "update"), updateTicket);
 
 /**
@@ -143,6 +327,7 @@ router.put("/:id", checkPermission("tickets", "update"), updateTicket);
  * /tickets/{id}/resolve:
  *   patch:
  *     summary: Resolve support ticket
+ *     description: "Execute operations matching capabilities."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -154,8 +339,53 @@ router.put("/:id", checkPermission("tickets", "update"), updateTicket);
  *           type: string
  *     responses:
  *       200:
- *         description: Ticket resolved successfully
- */
+ *         description: "Ticket resolved successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket resolved successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.patch("/:id/resolve", checkPermission("tickets", "resolve"), resolveTicket);
 
 /**
@@ -163,6 +393,7 @@ router.patch("/:id/resolve", checkPermission("tickets", "resolve"), resolveTicke
  * /tickets/{id}/close:
  *   patch:
  *     summary: Close support ticket
+ *     description: "Execute operations matching capabilities."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -174,8 +405,53 @@ router.patch("/:id/resolve", checkPermission("tickets", "resolve"), resolveTicke
  *           type: string
  *     responses:
  *       200:
- *         description: Ticket closed successfully
- */
+ *         description: "Ticket closed successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket closed successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.patch("/:id/close", checkPermission("tickets", "resolve"), closeTicket);
 
 /**
@@ -183,6 +459,7 @@ router.patch("/:id/close", checkPermission("tickets", "resolve"), closeTicket);
  * /tickets/{id}/replies:
  *   post:
  *     summary: Submit a reply to a support ticket
+ *     description: "Execute operations matching capabilities."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -206,8 +483,53 @@ router.patch("/:id/close", checkPermission("tickets", "resolve"), closeTicket);
  *                 example: Hello, please try resetting your browser cookies and check again.
  *     responses:
  *       200:
- *         description: Reply added successfully
- */
+ *         description: "Reply added successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Reply added successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/:id/replies", checkPermission("tickets", "update"), addTicketReply);
 
 /**
@@ -215,6 +537,7 @@ router.post("/:id/replies", checkPermission("tickets", "update"), addTicketReply
  * /tickets/{id}/attachments:
  *   post:
  *     summary: Add an attachment to a support ticket
+ *     description: "Instantiate and save a new record with the attributes specified in the request payload."
  *     tags: [13. Support Tickets]
  *     security:
  *       - bearerAuth: []
@@ -242,8 +565,53 @@ router.post("/:id/replies", checkPermission("tickets", "update"), addTicketReply
  *                 example: https://res.cloudinary.com/support/image/upload/err.png
  *     responses:
  *       200:
- *         description: Attachment added successfully
- */
+ *         description: "Attachment added successfully"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Attachment added successfully"
+ *                 data:
+ *                   type: object
+ *                   description: "Response payload data details."
+ 
+ *       400:
+ *         description: "Validation Error"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation failed."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: "field is required"
+ *       401:
+ *         description: "Unauthorized"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication token invalid or expired."*/
 router.post("/:id/attachments", checkPermission("tickets", "update"), addTicketAttachment);
 
 export default router;

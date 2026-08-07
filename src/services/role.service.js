@@ -21,7 +21,7 @@ export const getRolesService = async (companyId) => {
 export const createRoleService = async (roleData) => {
   const existing = await Role.findOne({ code: roleData.code.toUpperCase(), companyId: roleData.companyId });
   if (existing) {
-    throw new ApiError(400, "Role with this code already exists for this company");
+    throw new ApiError(409, "Role with this code already exists for this company");
   }
   return await Role.create(roleData);
 };

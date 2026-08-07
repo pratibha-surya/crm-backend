@@ -11,73 +11,81 @@ const options = {
     tags: [
       {
         name: "01. Authentication",
-        description: "Login, Forgot Password, Reset Password, OTP verification (Module 1)"
+        description: "STEP 1: Register, login, forgot/reset password, and verification (Module 1)"
       },
-      {
-        name: "02. Dashboard",
-        description: "Overview statistics, Monthly performance charts, recent activity feed (Module 2)"
-      },
+      // {
+      //   name: "20. Role & Permission",
+      //   description: "STEP 2: Define system roles, fine-grained access rules, and permissions matrix (Module 20)\n\n| Role | Permissions |\n| --- | --- |\n| Super Admin | Sab kuch access |\n| Admin | Company ke sabhi leads manage |\n| Sales Manager | Team ki leads assign aur monitor |\n| Sales Executive | Sirf apni assigned leads |\n| Support | Lead dekh sakta hai, edit nahi |"
+      // },
       {
         name: "03. User Management",
-        description: "Employees, Roles, Branches, Departments, Designations, Attendance & Leaves (Module 3)"
-      },
-      {
-        name: "04. Customer Management",
-        description: "Customer profiling, contact details, notes, activities history (Module 4)"
-      },
-      {
-        name: "05. Lead Management",
-        description: "Lead captures, scores, timeline logs, follow-up alerts, CSV exports/imports (Module 5)"
-      },
-      {
-        name: "06. Deal Management",
-        description: "Sales Pipeline, Kanban board updates, Deal valuation, Expected closings, Forecasting (Module 6)"
-      },
-      {
-        name: "07. Meeting Management",
-        description: "Google Meet & Zoom integrations, agendas, attendee listings, minutes of meetings (Module 7)"
-      },
-      {
-        name: "08. Task Management",
-        description: "Daily tasking CRUD, priorities, comments thread, attachments, recurring logs (Module 8)"
-      },
-      {
-        name: "09. Quotations",
-        description: "Proposals, pricing discounts, tax listings, and converting quotes to invoice (Module 9)"
-      },
-      {
-        name: "10. Invoice",
-        description: "Billing invoices, GST listings, payment gateway references, and status tracking (Module 10)"
+        description: "STEP 3: Add employees, branches, departments, designations, attendance & leaves (Module 3)"
       },
       {
         name: "11. Product Management",
-        description: "Product directory, category tags, SKU identification, pricing, barcode, image (Module 11)"
+        description: "STEP 4: Set up catalog products, category tags, SKU identification, pricing, and stock (Module 11)"
+      },
+      {
+        name: "21. Inquiries & Chat",
+        description: "STEP 5: Manage incoming public widget inquiries, verification, and chat session messaging (Module 21)"
+      },
+      {
+        name: "05. Lead Management",
+        description: "STEP 6: Capture new leads, scores, timeline logs, and pipeline status updates (Module 5)"
+      },
+      {
+        name: "08. Task Management",
+        description: "STEP 7: Schedule follow-up tasks, assign tasks, prioritize, add comments, and attach logs (Module 8)"
+      },
+      {
+        name: "07. Meeting Management",
+        description: "STEP 8: Set up Google Meet/Zoom demos, attendee listings, and minutes of meetings (Module 7)"
+      },
+      {
+        name: "09. Quotations",
+        description: "STEP 9: Create pricing proposals, apply discounts/taxes, and convert accepted quotes to invoice (Module 9)"
+      },
+      {
+        name: "06. Deal Management",
+        description: "STEP 10: Track opportunities, deal valuations, forecasting, and pipeline closures (Module 6)"
+      },
+      {
+        name: "04. Customer Management",
+        description: "STEP 11: Build customer profiles, logs, and activity history for won opportunities (Module 4)"
+      },
+      {
+        name: "10. Invoice",
+        description: "STEP 12: Generate billing invoices, calculate tax rates, and track invoice payments (Module 10)"
       },
       {
         name: "13. Support Tickets",
-        description: "Support desk tickets routing, priority levels, assignment, replies log (Module 13)"
+        description: "STEP 13: Handle client support desk tickets, resolve queries, and log replies (Module 13)"
+      },
+      {
+        name: "02. Dashboard",
+        description: "ANALYTICS: View business stats, monthly performance charts, and recent activity feeds (Module 2)"
       },
       {
         name: "17. Reports",
-        description: "CSV reports export system for sales, payments, personnel stats, and conversions (Module 17)"
+        description: "REPORTS: Export CSV files for sales performance, payments, and conversion rates (Module 17)"
       },
       {
         name: "18. Audit Log",
-        description: "User authentication records history, modification, IP, and browser tracking (Module 18)"
+        description: "HISTORY: Log system modifications, authentication history, IP addresses, and browsers (Module 18)"
       },
       {
         name: "19. Settings",
-        description: "Branding, localization currency/timezone/languages, SMTP, API keys (Module 19)"
-      },
-      {
-        name: "20. Role & Permission",
-        description: "System roles, fine-grained access rules, and permissions matrix (Module 20)"
+        description: "SETUP: Customize branding, localization currencies, timezone settings, and SMTP servers (Module 19)"
       }
     ],
     servers: [
       {
         url: "http://localhost:5000/api/v1",
-        description: "Development Server"
+        description: "Localhost Development Server"
+      },
+      {
+        url: "http://192.168.1.2:5000/api/v1",
+        description: "Network Host Server"
       }
     ],
     components: {
@@ -90,11 +98,7 @@ const options = {
         }
       }
     },
-    security: [
-      {
-        bearerAuth: []
-      }
-    ]
+    apis: ["./src/routes/*.js"]
   },
   apis: ["./src/routes/*.js"]
 };

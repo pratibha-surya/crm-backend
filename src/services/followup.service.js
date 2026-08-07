@@ -3,9 +3,38 @@ import Lead from "../models/Lead.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getFollowupsService = async (query = {}, companyId) => {
-  const filter = { ...query };
+  const { page = 1, limit = 10, search = "", status, priority, type } = query;
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+  const skip = (pageNum - 1) * limitNum;
+
+  const filter = {};
   if (companyId) filter.companyId = companyId;
-  return await Followup.find(filter).sort({ dueDate: 1 });
+  if (status) filter.status = status;
+  if (priority) filter.priority = priority;
+  if (type) filter.type = type;
+  if (search) {
+    filter.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { leadName: { $regex: search, $options: "i" } },
+      { company: { $regex: search, $options: "i" } }
+    ];
+  }
+
+  const [followups, total] = await Promise.all([
+    Followup.find(filter).sort({ dueDate: 1 }).skip(skip).limit(limitNum),
+    Followup.countDocuments(filter)
+  ]);
+
+  return {
+    followups,
+    pagination: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum)
+    }
+  };
 };
 
 export const createFollowupService = async (data) => {
