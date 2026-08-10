@@ -45,18 +45,24 @@ export const protect = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, "Invalid or expired access token. Please login again.");
   }
 
-  let permissions = decoded.permissions || [];
+  let permissions = [];
   try {
     // Look up dynamic role config from DB
-    const dbRole = await Role.findOne({ code: decoded.role, companyId: decoded.companyId });
+    let dbRole = null;
+    if (decoded.companyId) {
+      dbRole = await Role.findOne({ code: decoded.role, companyId: decoded.companyId });
+    }
+    if (!dbRole) {
+      dbRole = await Role.findOne({ code: decoded.role });
+    }
     if (dbRole && Array.isArray(dbRole.permissions)) {
-      permissions = [...new Set([...permissions, ...dbRole.permissions])];
+      permissions = dbRole.permissions;
     } else {
-      const fallback = DEFAULT_ROLE_PERMISSIONS[decoded.role] || [];
-      permissions = [...new Set([...permissions, ...fallback])];
+      permissions = DEFAULT_ROLE_PERMISSIONS[decoded.role] || [];
     }
   } catch (err) {
     console.error("Error fetching dynamic permissions in protect middleware:", err);
+    permissions = DEFAULT_ROLE_PERMISSIONS[decoded.role] || [];
   }
 
   req.user = {

@@ -100,11 +100,20 @@ export const registerUser = async (userData, currentUser = null) => {
     role: requestedRole,
     companyId: companyId,
     permissions: Array.isArray(userData.permissions) ? userData.permissions : [],
-    isActive: true,
-    isVerified: true
+    isActive: false,
+    isVerified: false
   });
 
-  return getUserSafeData(user);
+  const { saveOTP } = await import("../utils/otp.js");
+  const otpCode = await saveOTP(normalizedEmail, "REGISTRATION");
+  const emailSent = await sendOtpEmail(normalizedEmail, otpCode);
+
+  const safeUser = getUserSafeData(user);
+  return {
+    user: safeUser,
+    otp: process.env.NODE_ENV === "production" ? undefined : Number(otpCode),
+    message: emailSent ? "OTP sent successfully." : "OTP generated successfully."
+  };
 };
 
 const issueAuthTokens = async (user) => {
@@ -138,10 +147,6 @@ export const loginUser = async (email, password, rememberMe = false) => {
     throw new ApiError(401, "Invalid credentials");
   }
 
-  if (!user.isActive) {
-    throw new ApiError(403, "Account is inactive. Please contact your admin.");
-  }
-
   if (!user.password) {
     throw new ApiError(401, "Invalid credentials");
   }
@@ -151,10 +156,42 @@ export const loginUser = async (email, password, rememberMe = false) => {
     throw new ApiError(401, "Invalid credentials");
   }
 
+  if (!user.isVerified) {
+    const { saveOTP } = await import("../utils/otp.js");
+    const otpCode = await saveOTP(normalizedEmail, "REGISTRATION");
+    await sendOtpEmail(normalizedEmail, otpCode);
+    throw new ApiError(403, "EMAIL_NOT_VERIFIED");
+  }
+
+  if (!user.isActive) {
+    throw new ApiError(403, "Account is inactive. Please contact your admin.");
+  }
+
   const { accessToken, refreshToken } = await issueAuthTokens(user);
 
+  const safeData = getUserSafeData(user);
+  let permissions = [];
+  try {
+    let dbRole = null;
+    if (user.companyId) {
+      dbRole = await Role.findOne({ code: user.role, companyId: user.companyId });
+    }
+    if (!dbRole) {
+      dbRole = await Role.findOne({ code: user.role });
+    }
+    if (dbRole && Array.isArray(dbRole.permissions)) {
+      permissions = dbRole.permissions;
+    } else {
+      permissions = DEFAULT_ROLE_PERMISSIONS[user.role] || [];
+    }
+  } catch (err) {
+    console.error("Error fetching dynamic permissions in loginUser:", err);
+    permissions = DEFAULT_ROLE_PERMISSIONS[user.role] || [];
+  }
+  safeData.permissions = permissions;
+
   return {
-    user: getUserSafeData(user),
+    user: safeData,
     accessToken,
     refreshToken,
     rememberMe
@@ -203,34 +240,23 @@ export const forgotPassword = async (email) => {
     };
   }
 
-  const otpCode = generateOtp();
-  user.otpCode = await bcrypt.hash(otpCode, 10);
-  user.otpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
-  await user.save();
-
+  const { saveOTP } = await import("../utils/otp.js");
+  const otpCode = await saveOTP(normalizedEmail, "FORGOT_PASSWORD");
   const emailSent = await sendOtpEmail(normalizedEmail, otpCode);
 
   return {
     message: emailSent ? "OTP sent successfully." : "OTP generated successfully.",
-    otp: process.env.NODE_ENV === "production" ? undefined : otpCode
+    otp: process.env.NODE_ENV === "production" ? undefined : Number(otpCode)
   };
 };
 
 export const verifyOtp = async (email, otpCode) => {
   const normalizedEmail = String(email || "").trim().toLowerCase();
-  const user = await User.findOne({ email: normalizedEmail }).select("+otpCode +otpExpiresAt");
+  const { verifyOTP } = await import("../utils/otp.js");
+  const result = await verifyOTP(normalizedEmail, String(otpCode), "FORGOT_PASSWORD", false);
 
-  if (!user || !user.otpCode || !user.otpExpiresAt) {
-    throw new ApiError(400, "Invalid or expired OTP");
-  }
-
-  if (new Date(user.otpExpiresAt).getTime() < Date.now()) {
-    throw new ApiError(400, "OTP expired. Please request a new one.");
-  }
-
-  const isOtpValid = await bcrypt.compare(String(otpCode), user.otpCode);
-  if (!isOtpValid) {
-    throw new ApiError(400, "Invalid OTP");
+  if (!result.valid) {
+    throw new ApiError(400, result.message);
   }
 
   return { verified: true };
@@ -238,25 +264,20 @@ export const verifyOtp = async (email, otpCode) => {
 
 export const resetPassword = async (email, otpCode, newPassword) => {
   const normalizedEmail = String(email || "").trim().toLowerCase();
-  const user = await User.findOne({ email: normalizedEmail }).select("+password +otpCode +otpExpiresAt");
+  const { verifyOTP } = await import("../utils/otp.js");
+  const result = await verifyOTP(normalizedEmail, String(otpCode), "FORGOT_PASSWORD");
 
-  if (!user || !user.otpCode || !user.otpExpiresAt) {
-    throw new ApiError(400, "Invalid or expired OTP");
+  if (!result.valid) {
+    throw new ApiError(400, result.message);
   }
 
-  if (new Date(user.otpExpiresAt).getTime() < Date.now()) {
-    throw new ApiError(400, "OTP expired. Please request a new one.");
-  }
-
-  const isOtpValid = await bcrypt.compare(String(otpCode), user.otpCode);
-  if (!isOtpValid) {
-    throw new ApiError(400, "Invalid OTP");
+  const user = await User.findOne({ email: normalizedEmail }).select("+password");
+  if (!user) {
+    throw new ApiError(404, "User not found");
   }
 
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(newPassword, salt);
-  user.otpCode = undefined;
-  user.otpExpiresAt = undefined;
   user.refreshToken = undefined;
   await user.save();
 
@@ -281,18 +302,24 @@ export const getCurrentUserService = async (userId) => {
     throw new ApiError(404, "User not found");
   }
   const safeData = getUserSafeData(user);
-  let permissions = Array.isArray(user.permissions) ? user.permissions : [];
+  let permissions = [];
 
   try {
-    const dbRole = await Role.findOne({ code: user.role, companyId: user.companyId });
+    let dbRole = null;
+    if (user.companyId) {
+      dbRole = await Role.findOne({ code: user.role, companyId: user.companyId });
+    }
+    if (!dbRole) {
+      dbRole = await Role.findOne({ code: user.role });
+    }
     if (dbRole && Array.isArray(dbRole.permissions)) {
-      permissions = [...new Set([...permissions, ...dbRole.permissions])];
+      permissions = dbRole.permissions;
     } else {
-      const fallback = DEFAULT_ROLE_PERMISSIONS[user.role] || [];
-      permissions = [...new Set([...permissions, ...fallback])];
+      permissions = DEFAULT_ROLE_PERMISSIONS[user.role] || [];
     }
   } catch (err) {
     console.error("Error fetching dynamic permissions in getCurrentUserService:", err);
+    permissions = DEFAULT_ROLE_PERMISSIONS[user.role] || [];
   }
 
   safeData.permissions = permissions;

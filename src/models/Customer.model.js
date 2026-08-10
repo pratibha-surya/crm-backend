@@ -15,7 +15,8 @@ const customerSchema = new Schema(
     tags: [String],
     address: { street: String, city: String, state: String, country: String, zipCode: String },
     multipleContacts: [{ name: String, email: String, phone: String, designation: String }],
-    status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE" }
+    status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE" },
+    assignedTo: { type: Schema.Types.ObjectId, ref: "User", index: true }
   },
   { timestamps: true }
 );

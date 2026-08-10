@@ -217,4 +217,36 @@ router.put(
   updateSettings
 );
 
+import multer from "multer";
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
+
+/**
+ * @swagger
+ * /settings/upload-logo:
+ *   post:
+ *     summary: Upload company logo
+ *     description: Uploads a company logo to ImageKit and saves the URL in settings
+ *     tags: [19. Settings]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Logo uploaded successfully
+ */
+router.post(
+  "/upload-logo",
+  checkPermission("settings", "update"),
+  upload.single("file"),
+  (req, res, next) => import("../controllers/settings.controller.js").then(m => m.uploadLogo(req, res, next)).catch(next)
+);
+
 export default router;

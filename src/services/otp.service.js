@@ -19,7 +19,7 @@ export const sendOTPEmail = async (email, purpose = "REGISTRATION") => {
   return {
     success: true,
     message: `OTP sent successfully to ${email}. (Check server console for local testing)`,
-    otp: process.env.NODE_ENV === "development" ? otp : undefined
+    otp: Number(otp)
   };
 };
 

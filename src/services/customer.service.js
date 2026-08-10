@@ -19,7 +19,7 @@ export const getCustomersService = async (query = {}, companyId) => {
   }
 
   const [customers, total] = await Promise.all([
-    Customer.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
+    Customer.find(filter).populate("assignedTo", "firstName lastName email").sort({ createdAt: -1 }).skip(skip).limit(limitNum),
     Customer.countDocuments(filter)
   ]);
 
@@ -36,7 +36,7 @@ export const getCustomersService = async (query = {}, companyId) => {
 
 export const getCustomerByIdService = async (customerId, companyId) => {
   const filter = companyId ? { _id: customerId, companyId } : { _id: customerId };
-  const customer = await Customer.findOne(filter);
+  const customer = await Customer.findOne(filter).populate("assignedTo", "firstName lastName email");
   if (!customer) {
     throw new ApiError(404, "Customer not found");
   }

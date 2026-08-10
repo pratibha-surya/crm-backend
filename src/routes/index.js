@@ -25,6 +25,7 @@ import calendarRoutes from "./calendar.routes.js";
 import auditLogRoutes from "./auditLog.routes.js";
 import dashboardRoutes from "./dashboard.routes.js";
 import inquiryRoutes from "./inquiry.route.js";
+import notificationRoutes from "./notification.routes.js";
 
 const router = express.Router();
 
@@ -65,5 +66,6 @@ router.use("/calendar", calendarRoutes);
 router.use("/audit-logs", auditLogRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/inquiries", inquiryRoutes);
+router.use("/notifications", notificationRoutes);
 
 export default router;

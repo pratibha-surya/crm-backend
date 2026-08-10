@@ -11,7 +11,7 @@ const otpSchema = new Schema(
       trim: true
     },
     otp: {
-      type: String,
+      type: Number,
       required: true
     },
     purpose: {

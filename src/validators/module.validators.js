@@ -89,8 +89,8 @@ export const validateDepartmentPayload = (req, res, next) => {
 };
 
 export const validateDesignationPayload = (req, res, next) => {
-  const { title, code } = req.body;
-  if (!title) throw new ApiError(400, "Designation title is required");
+  const { name, code } = req.body;
+  if (!name) throw new ApiError(400, "Designation name is required");
   if (!code) throw new ApiError(400, "Designation code identifier is required");
   next();
 };

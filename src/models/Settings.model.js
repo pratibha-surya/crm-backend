@@ -97,6 +97,14 @@ const settingsSchema = new Schema(
         default: "",
       },
     },
+
+    notifications: {
+      inApp: { type: Boolean, default: true },
+      email: { type: Boolean, default: true },
+      sms: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      browser: { type: Boolean, default: false },
+    },
   },
   {
     timestamps: true,

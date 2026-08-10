@@ -12,9 +12,10 @@ export const getQuotations = asyncHandler(async (req, res) => {
 });
 
 export const createQuotation = asyncHandler(async (req, res) => {
+  const companyId = req.user?.companyId || req.body.companyId || "000000000000000000000000";
   const quotation = await createQuotationService({
     ...req.body,
-    companyId: req.user?.companyId || req.body.companyId
+    companyId
   });
   return res.status(201).json(new ApiResponse(201, quotation, "Quotation created successfully"));
 });

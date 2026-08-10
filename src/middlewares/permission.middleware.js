@@ -43,6 +43,27 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "invoices:update",
     "quotations:read",
     "customers:read"
+  ],
+  COMPANY_ADMIN: [
+    "dashboard:read",
+    "employees:read", "employees:create", "employees:update", "employees:delete", "employees:export",
+    "customers:read", "customers:create", "customers:update", "customers:delete", "customers:export",
+    "leads:read", "leads:create", "leads:update", "leads:delete", "leads:export",
+    "pipeline:read", "pipeline:create", "pipeline:update", "pipeline:delete", "pipeline:export",
+    "meetings:read", "meetings:create", "meetings:update", "meetings:delete", "meetings:export",
+    "tasks:read", "tasks:create", "tasks:update", "tasks:delete", "tasks:export",
+    "quotations:read", "quotations:create", "quotations:update", "quotations:delete", "quotations:export",
+    "invoices:read", "invoices:create", "invoices:update", "invoices:delete", "invoices:export",
+    "products:read", "products:create", "products:update", "products:delete", "products:export",
+    "inventory:read", "inventory:create", "inventory:update", "inventory:delete", "inventory:export",
+    "tickets:read", "tickets:create", "tickets:update", "tickets:delete", "tickets:export", "tickets:resolve",
+    "reports:read", "reports:export",
+    "audit:read", "audit:export",
+    "roles:read", "roles:update",
+    "settings:read", "settings:update",
+    "branches:read", "branches:create", "branches:update", "branches:delete", "branches:export",
+    "departments:read", "departments:create", "departments:update", "departments:delete", "departments:export",
+    "designations:read", "designations:create", "designations:update", "designations:delete", "designations:export"
   ]
 };
 
@@ -59,7 +80,7 @@ export const checkPermission = (moduleName, action) => {
 
       const requiredPermission = `${moduleName}:${action}`;
 
-      if (req.user.role === "SUPER_ADMIN" || req.user.role === "COMPANY_ADMIN") {
+      if (req.user.role === "SUPER_ADMIN") {
         return next();
       }
 

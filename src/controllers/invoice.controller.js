@@ -12,9 +12,10 @@ export const getInvoices = asyncHandler(async (req, res) => {
 });
 
 export const createInvoice = asyncHandler(async (req, res) => {
+  const companyId = req.user?.companyId || req.body.companyId || "000000000000000000000000";
   const invoice = await createInvoiceService({
     ...req.body,
-    companyId: req.user?.companyId || req.body.companyId
+    companyId
   });
   return res.status(201).json(new ApiResponse(201, invoice, "Invoice created successfully"));
 });

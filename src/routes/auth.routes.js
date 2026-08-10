@@ -489,7 +489,7 @@ router.post("/reset-password", handleResetPassword);
  *       401:
  *         description: Unauthorized
  */
-router.post("/logout", protect, handleLogout);
+router.post("/logout", optionalProtect, handleLogout);
 
 /**
  * @swagger

@@ -2,17 +2,15 @@ import Settings from "../models/Settings.model.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getSettingsService = async (companyId) => {
-  if (!companyId) {
-    throw new ApiError(400, "Company ID is required");
-  }
+  const targetCompanyId = companyId || "000000000000000000000000";
 
-  let settings = await Settings.findOne({ companyId });
+  let settings = await Settings.findOne({ companyId: targetCompanyId });
 
   if (!settings) {
     settings = await Settings.create({
-      companyId,
+      companyId: targetCompanyId,
       company: {
-        name: "",
+        name: "Netrootx",
         logo: "",
         email: "",
         phone: "",
@@ -49,6 +47,13 @@ export const getSettingsService = async (companyId) => {
         terms: "",
         notes: "",
       },
+      notifications: {
+        inApp: true,
+        email: true,
+        sms: true,
+        push: true,
+        browser: false,
+      },
     });
   }
 
@@ -56,12 +61,10 @@ export const getSettingsService = async (companyId) => {
 };
 
 export const updateSettingsService = async (companyId, updateData) => {
-  if (!companyId) {
-    throw new ApiError(400, "Company ID is required");
-  }
+  const targetCompanyId = companyId || "000000000000000000000000";
 
   return await Settings.findOneAndUpdate(
-    { companyId },
+    { companyId: targetCompanyId },
     { $set: updateData },
     {
       new: true,

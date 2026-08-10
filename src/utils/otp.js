@@ -11,14 +11,15 @@ export const generate6DigitOTP = () => {
  * Save generated OTP to database (Valid for 10 minutes)
  */
 export const saveOTP = async (email, purpose = "REGISTRATION") => {
+  const normalizedEmail = String(email || "").trim().toLowerCase();
   const otp = generate6DigitOTP();
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes validity
 
   // Remove any previous active OTPs for this email & purpose
-  await OTP.deleteMany({ email, purpose });
+  await OTP.deleteMany({ email: normalizedEmail, purpose });
 
   await OTP.create({
-    email,
+    email: normalizedEmail,
     otp,
     purpose,
     expiresAt
@@ -30,8 +31,9 @@ export const saveOTP = async (email, purpose = "REGISTRATION") => {
 /**
  * Verify provided OTP against database records
  */
-export const verifyOTP = async (email, otp, purpose = "REGISTRATION") => {
-  const record = await OTP.findOne({ email, purpose });
+export const verifyOTP = async (email, otp, purpose = "REGISTRATION", deleteAfter = true) => {
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  const record = await OTP.findOne({ email: normalizedEmail, purpose });
 
   if (!record) {
     return { valid: false, message: "OTP not found or expired. Please request a new one." };
@@ -42,11 +44,13 @@ export const verifyOTP = async (email, otp, purpose = "REGISTRATION") => {
     return { valid: false, message: "OTP has expired." };
   }
 
-  if (record.otp !== otp) {
+  if (String(record.otp) !== String(otp)) {
     return { valid: false, message: "Invalid OTP code." };
   }
 
-  // Delete OTP record after successful verification
-  await OTP.deleteOne({ _id: record._id });
+  if (deleteAfter) {
+    // Delete OTP record after successful verification
+    await OTP.deleteOne({ _id: record._id });
+  }
   return { valid: true, message: "OTP verified successfully." };
 };

@@ -34,22 +34,22 @@ const setAuthCookies = (res, accessToken, refreshToken, rememberMe = false) => {
 };
 
 export const handleRegister = asyncHandler(async (req, res) => {
-  const user = await registerUser(req.body, req.user);
+  const result = await registerUser(req.body, req.user);
 
   // Write audit log
   await logActionService(
-    user.companyId || null,
-    user._id,
+    result.user.companyId || null,
+    result.user._id,
     "REGISTER",
     "Authentication",
-    `New account registered: ${user.email} (${user.role})`,
+    `New account registered: ${result.user.email} (${result.user.role})`,
     req.ip,
     req.headers["user-agent"]
   );
 
   return res
     .status(201)
-    .json(new ApiResponse(201, user, "User registered successfully"));
+    .json(new ApiResponse(201, result, "User registered successfully"));
 });
 
 export const handleLogin = asyncHandler(async (req, res) => {
@@ -114,6 +114,14 @@ export const handleVerifyOtp = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Please provide email and OTP");
   }
 
+  if (purpose === "PASSWORD_RESET") {
+    const { verifyOtp } = await import("../services/auth.service.js");
+    const payload = await verifyOtp(email, otp);
+    return res
+      .status(200)
+      .json(new ApiResponse(200, payload, "OTP verified successfully"));
+  }
+
   const payload = await verifyOTPService(email, otp, purpose || "REGISTRATION");
   return res
     .status(200)
@@ -133,18 +141,22 @@ export const handleResetPassword = asyncHandler(async (req, res) => {
 });
 
 export const handleLogout = asyncHandler(async (req, res) => {
-  const payload = await logoutUser(req.user._id);
+  let payload = { message: "Logout successful" };
 
-  // Write audit log
-  await logActionService(
-    req.user.companyId || null,
-    req.user._id,
-    "LOGOUT",
-    "Authentication",
-    `User logged out successfully: ${req.user.email}`,
-    req.ip,
-    req.headers["user-agent"]
-  );
+  if (req.user) {
+    payload = await logoutUser(req.user._id);
+
+    // Write audit log
+    await logActionService(
+      req.user.companyId || null,
+      req.user._id,
+      "LOGOUT",
+      "Authentication",
+      `User logged out successfully: ${req.user.email}`,
+      req.ip,
+      req.headers["user-agent"]
+    );
+  }
 
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
