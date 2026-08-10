@@ -17,7 +17,8 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "quotations:update",
     "tasks:read",
     "tasks:create",
-    "tasks:update"
+    "tasks:update",
+    "employees:read"
   ],
   SALES_EXECUTIVE: [
     "customers:read",
@@ -26,8 +27,14 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "leads:update",
     "deals:read",
     "quotations:read",
+    "quotations:create",
+    "quotations:update",
     "tasks:read",
-    "tasks:create"
+    "tasks:create",
+    "employees:read",
+    "meetings:read",
+    "meetings:create",
+    "meetings:update"
   ],
   CUSTOMER_SUPPORT: [
     "customers:read",
@@ -35,7 +42,8 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "tickets:read",
     "tickets:resolve",
     "tasks:read",
-    "leads:read"
+    "leads:read",
+    "employees:read"
   ],
   ACCOUNTANT: [
     "invoices:read",

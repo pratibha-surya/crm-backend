@@ -33,7 +33,10 @@ export const createUser = asyncHandler(async (req, res) => {
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
-  const updatedUser = await updateUserService(req.params.id, req.body);
+  const updatedUser = await updateUserService(req.params.id, {
+    ...req.body,
+    companyId: req.user?.companyId || req.body.companyId
+  });
   return res
     .status(200)
     .json(new ApiResponse(200, updatedUser, "User updated successfully"));

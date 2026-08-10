@@ -100,7 +100,7 @@ router.use(protect);
  *       403:
  *         description: Permission denied
  */
-router.get("/", checkPermission("users", "read"), getUsers);
+router.get("/", checkPermission("employees", "read"), getUsers);
 
 /**
  * @swagger
@@ -210,7 +210,7 @@ router.get("/", checkPermission("users", "read"), getUsers);
  *       403:
  *         description: Permission denied
  */
-router.post("/", checkPermission("users", "create"), createUser);
+router.post("/", checkPermission("employees", "create"), createUser);
 
 /**
  * @swagger
@@ -276,7 +276,7 @@ router.post("/", checkPermission("users", "create"), createUser);
  *                 message:
  *                   type: string
  *                   example: "Authentication token invalid or expired."*/
-router.get("/:id", checkPermission("users", "read"), getUserById);
+router.get("/:id", checkPermission("employees", "read"), getUserById);
 
 /**
  * @swagger
@@ -342,7 +342,7 @@ router.get("/:id", checkPermission("users", "read"), getUserById);
  *                 message:
  *                   type: string
  *                   example: "Authentication token invalid or expired."*/
-router.put("/:id", checkPermission("users", "update"), updateUser);
+router.put("/:id", checkPermission("employees", "update"), updateUser);
 
 /**
  * @swagger
@@ -408,6 +408,6 @@ router.put("/:id", checkPermission("users", "update"), updateUser);
  *                 message:
  *                   type: string
  *                   example: "Authentication token invalid or expired."*/
-router.delete("/:id", checkPermission("users", "delete"), deleteUser);
+router.delete("/:id", checkPermission("employees", "delete"), deleteUser);
 
 export default router;
