@@ -10,20 +10,16 @@ const ACCESS_TOKEN_EXPIRES_IN = "1h";
 const REFRESH_TOKEN_EXPIRES_IN = "30d";
 const OTP_EXPIRY_MINUTES = 5;
 
-const verifyTokenWithFallbacks = (token) => {
-  const currentSecret = process.env.JWT_SECRET || "your-secret-key";
-  const secrets = [currentSecret, "fallback_crm_secret_key_123"];
-  let lastError;
-
-  for (const secret of secrets) {
-    try {
-      return jwt.verify(token, secret);
-    } catch (error) {
-      lastError = error;
-    }
+const getJwtSecret = () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET must be configured");
   }
 
-  throw lastError || new Error("Token verification failed");
+  return process.env.JWT_SECRET;
+};
+
+const verifyToken = (token) => {
+  return jwt.verify(token, getJwtSecret());
 };
 
 const createTokenPayload = (user) => ({
@@ -117,7 +113,7 @@ export const registerUser = async (userData, currentUser = null) => {
 };
 
 const issueAuthTokens = async (user) => {
-  const currentSecret = process.env.JWT_SECRET || "your-secret-key";
+  const currentSecret = getJwtSecret();
   const accessToken = jwt.sign(
     createTokenPayload(user),
     currentSecret,
@@ -205,7 +201,7 @@ export const refreshUserToken = async (refreshTokenValue) => {
 
   let decoded;
   try {
-    decoded = verifyTokenWithFallbacks(refreshTokenValue);
+    decoded = verifyToken(refreshTokenValue);
   } catch (error) {
     throw new ApiError(401, "Invalid or expired refresh token");
   }

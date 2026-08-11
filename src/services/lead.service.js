@@ -1,5 +1,6 @@
 import Lead from "../models/Lead.model.js";
 import Task from "../models/Task.model.js";
+import User from "../models/User.model.js";
 import ApiError from "../utils/ApiError.js";
 import mongoose from "mongoose";
 
@@ -118,11 +119,26 @@ export const updateLeadStatusService = async (leadId, status, companyId, user = 
   return lead;
 };
 
-export const assignLeadService = async (leadId, userId, userName = "System", assignedById = null) => {
-  const lead = await Lead.findById(leadId);
+export const assignLeadService = async (leadId, userId, companyId, userName = "System", assignedById = null) => {
+  if (!mongoose.isValidObjectId(userId)) {
+    throw new ApiError(400, "A valid user ID is required to assign a lead");
+  }
+
+  const filter = companyId ? { _id: leadId, companyId } : { _id: leadId };
+  const lead = await Lead.findOne(filter);
   if (!lead) return null;
+
+  const assignee = await User.findOne({
+    _id: userId,
+    companyId: lead.companyId,
+    isActive: true,
+    isDeleted: { $ne: true }
+  });
+  if (!assignee) {
+    throw new ApiError(400, "Assignee must be an active user in the same company");
+  }
   
-  lead.assignedTo = userId;
+  lead.assignedTo = assignee._id;
   if (assignedById) {
     lead.assignedBy = assignedById;
   }
@@ -136,7 +152,7 @@ export const assignLeadService = async (leadId, userId, userName = "System", ass
     description: `Call and contact lead: ${lead.title} (${lead.contactPerson}) following your new assignment.`,
     priority: "HIGH",
     deadline: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
-    assignedTo: userId,
+    assignedTo: assignee._id,
     leadId: lead._id
   });
 

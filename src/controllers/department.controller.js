@@ -6,7 +6,7 @@ import {
   deleteDepartmentService 
 } from "../services/department.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getDepartments = asyncHandler(async (req, res) => {
   const departments = await getDepartmentsService(req.query, req.user?.companyId);

@@ -5,20 +5,16 @@ import { DEFAULT_ROLE_PERMISSIONS } from "./permission.middleware.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-const verifyTokenWithFallbacks = (token) => {
-  const currentSecret = process.env.JWT_SECRET || "your-secret-key";
-  const secrets = [currentSecret, "fallback_crm_secret_key_123"];
-  let lastError;
-
-  for (const secret of secrets) {
-    try {
-      return jwt.verify(token, secret);
-    } catch (error) {
-      lastError = error;
-    }
+const getJwtSecret = () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET must be configured");
   }
 
-  throw lastError || new Error("Token verification failed");
+  return process.env.JWT_SECRET;
+};
+
+const verifyToken = (token) => {
+  return jwt.verify(token, getJwtSecret());
 };
 
 export const protect = asyncHandler(async (req, res, next) => {
@@ -40,7 +36,7 @@ export const protect = asyncHandler(async (req, res, next) => {
 
   let decoded;
   try {
-    decoded = verifyTokenWithFallbacks(token);
+    decoded = verifyToken(token);
   } catch (err) {
     throw new ApiError(401, "Invalid or expired access token. Please login again.");
   }
@@ -90,7 +86,7 @@ export const optionalProtect = asyncHandler(async (req, res, next) => {
 
   if (token) {
     try {
-      const decoded = verifyTokenWithFallbacks(token);
+      const decoded = verifyToken(token);
 
       const currentUser = await User.findById(decoded.id).select("-password");
       if (currentUser && currentUser.isActive) {

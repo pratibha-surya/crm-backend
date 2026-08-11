@@ -6,7 +6,7 @@ import {
   deleteProductService 
 } from "../services/product.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getProducts = asyncHandler(async (req, res) => {
   const products = await getProductsService(req.query, req.user?.companyId);

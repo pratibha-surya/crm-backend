@@ -5,7 +5,7 @@ import {
   deleteFollowupService 
 } from "../services/followup.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getFollowups = asyncHandler(async (req, res) => {
   const followups = await getFollowupsService(req.query, req.user?.companyId);
@@ -13,7 +13,7 @@ export const getFollowups = asyncHandler(async (req, res) => {
 });
 
 export const createFollowup = asyncHandler(async (req, res) => {
-  const companyId = req.body.companyId || req.user?.companyId || "000000000000000000000000";
+  const companyId = req.user?.companyId || req.body.companyId;
   const followup = await createFollowupService({ ...req.body, companyId });
   res.status(201).json(new ApiResponse(201, followup, "Follow-up task scheduled successfully"));
 });

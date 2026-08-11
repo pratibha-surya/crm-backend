@@ -6,7 +6,7 @@ import {
   deleteDesignationService 
 } from "../services/designation.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getDesignations = asyncHandler(async (req, res) => {
   const designations = await getDesignationsService(req.query, req.user?.companyId);

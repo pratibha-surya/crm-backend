@@ -1,7 +1,7 @@
 import Task from "../models/Task.model.js";
 import Meeting from "../models/Meeting.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getCalendarEvents = asyncHandler(async (req, res) => {
   const companyId = req.user?.companyId;

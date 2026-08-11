@@ -38,21 +38,9 @@ export const getFollowupsService = async (query = {}, companyId) => {
 };
 
 export const createFollowupService = async (data) => {
-  let lead = await Lead.findById(data.leadId);
+  const lead = await Lead.findOne({ _id: data.leadId, companyId: data.companyId });
   if (!lead) {
-    // Auto-bootstrap Lead with the exact ID provided to bypass testing block
-    lead = await Lead.create({
-      _id: data.leadId,
-      companyId: data.companyId,
-      title: "Auto-Bootstrapped Lead",
-      contactPerson: "Test Contact Mercer",
-      email: "test.lead@crm.com",
-      phone: "+1 555-0900",
-      companyName: "Acme Test Corp",
-      source: "WEBSITE",
-      leadScore: 50,
-      status: "NEW"
-    });
+    throw new ApiError(404, "Lead not found in your company");
   }
   
   return await Followup.create({

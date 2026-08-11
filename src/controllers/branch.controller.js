@@ -6,7 +6,7 @@ import {
   deleteBranchService 
 } from "../services/branch.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getBranches = asyncHandler(async (req, res) => {
   const branches = await getBranchesService(req.query, req.user?.companyId);

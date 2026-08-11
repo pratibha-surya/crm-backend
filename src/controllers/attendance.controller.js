@@ -6,7 +6,7 @@ import {
   deleteAttendanceService 
 } from "../services/attendance.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getAttendance = asyncHandler(async (req, res) => {
   const attendanceRecords = await getAttendanceService(req.query, req.user?.companyId);

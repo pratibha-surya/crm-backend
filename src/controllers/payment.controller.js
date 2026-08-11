@@ -5,7 +5,7 @@ import {
   deletePaymentService 
 } from "../services/payment.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getPayments = asyncHandler(async (req, res) => {
   const payments = await getPaymentsService(req.query, req.user?.companyId);

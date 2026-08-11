@@ -1,5 +1,5 @@
 import express from "express";
-import { handleSendOTP, handleVerifyOTP } from "../controllers/otp.controller.js";
+import { handleSendOTP } from "../controllers/otp.controller.js";
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
  *   post:
  *     summary: Send OTP to user email
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     requestBody:
  *       required: true
  *       content:
@@ -76,53 +76,5 @@ const router = express.Router();
  *                   type: string
  *                   example: "Authentication token invalid or expired."*/
 router.post("/send-otp", handleSendOTP);
-
-/**
- * @swagger
- * /auth/verify-otp:
- *   post:
- *     summary: Verify OTP code
- *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - otp
- *             properties:
- *               email:
- *                 type: string
- *                 example: user@example.com
- *               otp:
- *                 type: string
- *                 example: "123456"
- *               purpose:
- *                 type: string
- *                 enum: [REGISTRATION, FORGOT_PASSWORD, 2FA]
- *                 default: REGISTRATION
- *     responses:
- *       200:
- *         description: OTP verified successfully
- *       401:
- *         description: "Unauthorized"
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Authentication token invalid or expired."
- *       400:
- *         description: Invalid or expired OTP
- */
-router.post("/verify-otp", handleVerifyOTP);
 
 export default router;

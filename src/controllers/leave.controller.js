@@ -6,7 +6,7 @@ import {
   deleteLeaveService 
 } from "../services/leave.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiResponse from "../utils/apiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 export const getLeaves = asyncHandler(async (req, res) => {
   const leaves = await getLeavesService(req.query, req.user?.companyId);

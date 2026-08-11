@@ -126,7 +126,7 @@ router.post("/register", optionalProtect, handleRegister);
  *   post:
  *     summary: Login user and return JWT tokens
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     requestBody:
  *       required: true
  *       content:
@@ -222,7 +222,7 @@ router.post("/login", handleLogin);
  *   post:
  *     summary: Refresh access token using refresh token
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     requestBody:
  *       required: false
  *       content:
@@ -300,7 +300,7 @@ router.post("/refresh-token", handleRefreshToken);
  *   post:
  *     summary: Send OTP for password reset
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     requestBody:
  *       required: true
  *       content:
@@ -370,7 +370,7 @@ router.post("/forgot-password", handleForgotPassword);
  *   post:
  *     summary: Verify OTP for password reset
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     requestBody:
  *       required: true
  *       content:
@@ -414,7 +414,7 @@ router.post("/verify-otp", handleVerifyOtp);
  *   post:
  *     summary: Reset password with verified OTP
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     requestBody:
  *       required: true
  *       content:
@@ -462,7 +462,7 @@ router.post("/reset-password", handleResetPassword);
  *   post:
  *     summary: Logout the current authenticated user
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -497,7 +497,7 @@ router.post("/logout", optionalProtect, handleLogout);
  *   get:
  *     summary: Get current authenticated user profile
  *     description: "Execute operations matching capabilities."
- *     tags: [Authentication]
+ *     tags: [01. Authentication]
  *     security:
  *       - bearerAuth: []
  *     responses:

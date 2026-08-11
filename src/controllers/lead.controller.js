@@ -60,7 +60,13 @@ export const assignLead = asyncHandler(async (req, res) => {
 
   if (!userId) throw new ApiError(400, "User ID is required to assign lead");
 
-  const assignedLead = await assignLeadService(id, userId, userName, req.user?._id);
+  const assignedLead = await assignLeadService(
+    id,
+    userId,
+    req.user?.companyId,
+    userName,
+    req.user?._id
+  );
   if (!assignedLead) throw new ApiError(404, "Lead not found");
 
   return res.status(200).json(new ApiResponse(200, assignedLead, "Lead assigned successfully"));
@@ -78,7 +84,7 @@ export const addLeadNote = asyncHandler(async (req, res) => {
 });
 
 export const exportLeadsCSV = asyncHandler(async (req, res) => {
-  const leads = await getLeadsService(req.query, req.user?.companyId);
+  const { leads } = await getLeadsService(req.query, req.user?.companyId, req.user);
   
   // Format as basic CSV
   let csv = "ID,Title,Contact Person,Email,Phone,Company Name,Source,Status,Lead Score\n";
