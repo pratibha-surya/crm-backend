@@ -3,6 +3,7 @@ import Role from "../models/Role.model.js";
 
 export const DEFAULT_ROLE_PERMISSIONS = {
   SALES_MANAGER: [
+    "calendar:read",
     "customers:read",
     "customers:create",
     "customers:update",
@@ -21,6 +22,7 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "employees:read"
   ],
   SALES_EXECUTIVE: [
+    "calendar:read",
     "customers:read",
     "leads:read",
     "leads:create",
@@ -37,6 +39,7 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "meetings:update"
   ],
   CUSTOMER_SUPPORT: [
+    "calendar:read",
     "customers:read",
     "tickets:create",
     "tickets:read",
@@ -46,6 +49,7 @@ export const DEFAULT_ROLE_PERMISSIONS = {
     "employees:read"
   ],
   ACCOUNTANT: [
+    "calendar:read",
     "invoices:read",
     "invoices:create",
     "invoices:update",
@@ -54,6 +58,7 @@ export const DEFAULT_ROLE_PERMISSIONS = {
   ],
   COMPANY_ADMIN: [
     "dashboard:read",
+    "calendar:read",
     "employees:read", "employees:create", "employees:update", "employees:delete", "employees:export",
     "customers:read", "customers:create", "customers:update", "customers:delete", "customers:export",
     "leads:read", "leads:create", "leads:update", "leads:delete", "leads:export",
