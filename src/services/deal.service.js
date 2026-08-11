@@ -4,7 +4,11 @@ import ApiError from "../utils/ApiError.js";
 export const getDealsService = async (query = {}, companyId) => {
   const filter = { ...query };
   if (companyId) filter.companyId = companyId;
-  return await Deal.find(filter).populate("assignedTo", "firstName lastName email").sort({ createdAt: -1 });
+  return await Deal.find(filter)
+    .populate("assignedTo", "firstName lastName email")
+    .populate("customerId", "companyName contactPerson email")
+    .populate("leadId", "title companyName contactPerson email")
+    .sort({ createdAt: -1 });
 };
 
 export const createDealService = async (data) => {

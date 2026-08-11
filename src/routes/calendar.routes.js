@@ -1,7 +1,7 @@
 import express from "express";
 import { getCalendarEvents } from "../controllers/calendar.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
-import { authorizeRoles } from "../middlewares/role.middleware.js";
+import { checkPermission } from "../middlewares/permission.middleware.js";
 
 const router = express.Router();
 
@@ -74,7 +74,7 @@ router.use(protect);
  *                   example: "Authentication token invalid or expired."*/
 router.get(
   "/",
-  authorizeRoles("SUPER_ADMIN", "COMPANY_ADMIN", "SALES_MANAGER", "SALES_EXECUTIVE", "ACCOUNTANT", "CUSTOMER_SUPPORT"),
+  checkPermission("calendar", "read"),
   getCalendarEvents
 );
 

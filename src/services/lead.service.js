@@ -61,6 +61,17 @@ export const createLeadService = async (leadData, userName = "System") => {
   };
   const lead = await Lead.create(data);
 
+  await Deal.create({
+    companyId: lead.companyId,
+    leadId: lead._id,
+    title: lead.companyName || lead.title,
+    stage: "PROSPECT",
+    dealValue: 0,
+    probability: 20,
+    expectedClosingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    assignedTo: lead.assignedTo
+  });
+
   if (lead.assignedTo) {
     await Task.create({
       companyId: lead.companyId || "000000000000000000000000",
