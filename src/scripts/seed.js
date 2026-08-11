@@ -28,7 +28,7 @@ import Inquiry from "../models/Inquiry.model.js";
 const upsert = (Model, filter, data) => Model.findOneAndUpdate(
   filter,
   { $set: data },
-  { new: true, upsert: true, setDefaultsOnInsert: true }
+  { returnDocument: "after", upsert: true, setDefaultsOnInsert: true }
 );
 
 const run = async () => {

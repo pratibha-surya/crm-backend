@@ -5,8 +5,9 @@ const { Schema, model } = mongoose;
 const quotationSchema = new Schema(
   {
     companyId: { type: Schema.Types.ObjectId, ref: "Company", required: true, index: true },
-    quotationNumber: { type: String, required: true, unique: true },
-    customerId: { type: Schema.Types.ObjectId, ref: "Customer", required: true },
+    quotationNumber: { type: String, required: true, trim: true },
+    leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
+    customerId: { type: Schema.Types.ObjectId, ref: "Customer", index: true },
     items: [
       {
         name: String,
@@ -25,5 +26,7 @@ const quotationSchema = new Schema(
   },
   { timestamps: true }
 );
+
+quotationSchema.index({ companyId: 1, quotationNumber: 1 }, { unique: true });
 
 export default model("Quotation", quotationSchema);

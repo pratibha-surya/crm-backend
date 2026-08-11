@@ -29,6 +29,20 @@ export const validateCustomerPayload = (req, res, next) => {
   next();
 };
 
+export const validateLeadPayload = (req, res, next) => {
+  const { title, contactPerson } = req.body;
+
+  if (!title || typeof title !== "string" || title.trim() === "") {
+    throw new ApiError(400, "Lead title is required");
+  }
+
+  if (!contactPerson || typeof contactPerson !== "string" || contactPerson.trim() === "") {
+    throw new ApiError(400, "Lead contact person is required");
+  }
+
+  next();
+};
+
 export const validateTaskPayload = (req, res, next) => {
   const { title } = req.body;
   if (!title || typeof title !== "string" || title.trim() === "") {

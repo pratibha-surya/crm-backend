@@ -6,7 +6,7 @@ const productSchema = new Schema(
   {
     companyId: { type: Schema.Types.ObjectId, ref: "Company", required: true, index: true },
     name: { type: String, required: true, trim: true },
-    sku: { type: String, required: true, unique: true, trim: true },
+    sku: { type: String, required: true, trim: true },
     category: { type: String, default: "General" },
     unit: { type: String, default: "pcs" },
     tax: { type: Number, default: 0 },
@@ -19,5 +19,7 @@ const productSchema = new Schema(
   },
   { timestamps: true }
 );
+
+productSchema.index({ companyId: 1, sku: 1 }, { unique: true });
 
 export default model("Product", productSchema);

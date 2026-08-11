@@ -65,8 +65,9 @@ export const deleteTaskService = async (id, companyId) => {
   return task;
 };
 
-export const updateTaskStatusService = async (id, status) => {
-  const task = await Task.findByIdAndUpdate(id, { status }, { new: true });
+export const updateTaskStatusService = async (id, status, companyId) => {
+  const filter = companyId ? { _id: id, companyId } : { _id: id };
+  const task = await Task.findOneAndUpdate(filter, { status }, { new: true, runValidators: true });
   if (!task) throw new ApiError(404, "Task not found");
   return task;
 };

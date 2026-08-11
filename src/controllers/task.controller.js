@@ -43,7 +43,7 @@ export const deleteTask = asyncHandler(async (req, res) => {
 });
 
 export const updateTaskStatus = asyncHandler(async (req, res) => {
-  const task = await updateTaskStatusService(req.params.id, req.body.status);
+  const task = await updateTaskStatusService(req.params.id, req.body.status, req.user?.companyId);
   res.status(200).json(new ApiResponse(200, task, "Task status updated successfully"));
 });
 

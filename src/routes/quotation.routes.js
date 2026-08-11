@@ -95,7 +95,6 @@ router.get("/", checkPermission("quotations", "read"), getQuotations);
  *             type: object
  *             required:
  *               - quotationNumber
- *               - customerId
  *               - items
  *               - subTotal
  *               - grandTotal
@@ -103,8 +102,13 @@ router.get("/", checkPermission("quotations", "read"), getQuotations);
  *               quotationNumber:
  *                 type: string
  *                 example: QT-2026-001
+ *               leadId:
+ *                 type: string
+ *                 description: Lead ID for a pre-conversion quotation
+ *                 example: 64f8c9d2e4b0a123456789ab
  *               customerId:
  *                 type: string
+ *                 description: Customer ID when quoting an existing customer
  *                 example: 64f8c9d2e4b0a123456789ac
  *               items:
  *                 type: array

@@ -1,6 +1,9 @@
 import Lead from "../models/Lead.model.js";
 import Task from "../models/Task.model.js";
 import User from "../models/User.model.js";
+import Customer from "../models/Customer.model.js";
+import Deal from "../models/Deal.model.js";
+import Quotation from "../models/Quotation.model.js";
 import ApiError from "../utils/ApiError.js";
 import mongoose from "mongoose";
 
@@ -171,4 +174,55 @@ export const addLeadNoteService = async (leadId, noteData, companyId) => {
   lead.timeline.push({ activity: "Added a new note", performedBy: noteData.authorName });
   await lead.save();
   return lead;
+};
+
+export const convertLeadToCustomerService = async (leadId, companyId, userName = "System") => {
+  const lead = await Lead.findOne({ _id: leadId, companyId });
+  if (!lead) throw new ApiError(404, "Lead not found");
+
+  const wonDeal = await Deal.findOne({ leadId: lead._id, companyId, stage: "WON" });
+  if (!wonDeal) {
+    throw new ApiError(409, "A linked deal must be marked WON before customer conversion");
+  }
+
+  if (!lead.email || !lead.phone) {
+    throw new ApiError(400, "Lead email and phone are required before customer conversion");
+  }
+
+  const email = lead.email.trim().toLowerCase();
+  let customer = await Customer.findOne({ companyId, email });
+  if (!customer) {
+    customer = await Customer.create({
+      companyId,
+      companyName: lead.companyName || lead.title,
+      contactPerson: lead.contactPerson,
+      email,
+      phone: lead.phone,
+      assignedTo: lead.assignedTo
+    });
+  }
+
+  await Quotation.updateMany(
+    {
+      companyId,
+      leadId: lead._id,
+      $or: [{ customerId: { $exists: false } }, { customerId: null }]
+    },
+    { $set: { customerId: customer._id } }
+  );
+
+  await Deal.updateMany(
+    {
+      companyId,
+      leadId: lead._id,
+      $or: [{ customerId: { $exists: false } }, { customerId: null }]
+    },
+    { $set: { customerId: customer._id } }
+  );
+
+  lead.status = "WON";
+  lead.timeline.push({ activity: "Converted to customer", performedBy: userName });
+  await lead.save();
+
+  return customer;
 };

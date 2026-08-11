@@ -21,6 +21,6 @@ export const createQuotation = asyncHandler(async (req, res) => {
 });
 
 export const updateQuotationStatus = asyncHandler(async (req, res) => {
-  const updated = await updateQuotationStatusService(req.params.id, req.body.status);
+  const updated = await updateQuotationStatusService(req.params.id, req.body.status, req.user?.companyId);
   return res.status(200).json(new ApiResponse(200, updated, "Quotation status updated successfully"));
 });

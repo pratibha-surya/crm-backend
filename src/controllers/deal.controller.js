@@ -37,7 +37,7 @@ export const deleteDeal = asyncHandler(async (req, res) => {
 });
 
 export const updateDealStage = asyncHandler(async (req, res) => {
-  const deal = await updateDealStageService(req.params.id, req.body.stage);
+  const deal = await updateDealStageService(req.params.id, req.body.stage, req.user?.companyId);
   res.status(200).json(new ApiResponse(200, deal, "Deal stage updated successfully"));
 });
 

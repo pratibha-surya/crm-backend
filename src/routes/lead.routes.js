@@ -9,10 +9,12 @@ import {
    deleteLead,
    addLeadNote,
    exportLeadsCSV,
-   importLeadsCSV
+   importLeadsCSV,
+   convertLeadToCustomer
 } from "../controllers/lead.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 import { checkPermission } from "../middlewares/permission.middleware.js";
+import { validateLeadPayload } from "../validators/module.validators.js";
 
 const router = express.Router();
 
@@ -462,7 +464,7 @@ router.get("/:id", checkPermission("leads", "read"), getLeadById);
  *                 message:
  *                   type: string
  *                   example: "Authentication token invalid or expired."*/
-router.post("/", checkPermission("leads", "create"), createLead);
+router.post("/", checkPermission("leads", "create"), validateLeadPayload, createLead);
 
 /**
  * @swagger
@@ -824,6 +826,26 @@ router.patch("/:id/status", checkPermission("leads", "update"), updateLeadStatus
  *                   type: string
  *                   example: "Lead not found"*/
 router.patch("/:id/assign", checkPermission("leads", "update"), assignLead);
+
+/**
+ * @swagger
+ * /leads/{id}/convert-to-customer:
+ *   post:
+ *     summary: Convert a lead to a customer after its linked deal is won
+ *     tags: [05. Lead Management]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       201:
+ *         description: Lead converted to customer successfully
+ */
+router.post("/:id/convert-to-customer", checkPermission("customers", "create"), convertLeadToCustomer);
 
 /**
  * @swagger

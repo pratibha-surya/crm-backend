@@ -34,8 +34,9 @@ export const deleteDealService = async (id, companyId) => {
   return deal;
 };
 
-export const updateDealStageService = async (id, stage) => {
-  const deal = await Deal.findByIdAndUpdate(id, { stage }, { new: true });
+export const updateDealStageService = async (id, stage, companyId) => {
+  const filter = companyId ? { _id: id, companyId } : { _id: id };
+  const deal = await Deal.findOneAndUpdate(filter, { stage }, { new: true, runValidators: true });
   if (!deal) throw new ApiError(404, "Deal not found");
   return deal;
 };

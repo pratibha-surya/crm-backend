@@ -5,9 +5,9 @@ const { Schema, model } = mongoose;
 const invoiceSchema = new Schema(
   {
     companyId: { type: Schema.Types.ObjectId, ref: "Company", required: true, index: true },
-    invoiceNumber: { type: String, required: true, unique: true },
-    quotationId: { type: Schema.Types.ObjectId, ref: "Quotation" },
-    customerId: { type: Schema.Types.ObjectId, ref: "Customer", required: true },
+    invoiceNumber: { type: String, required: true, trim: true },
+    quotationId: { type: Schema.Types.ObjectId, ref: "Quotation", index: true },
+    customerId: { type: Schema.Types.ObjectId, ref: "Customer", required: true, index: true },
     items: [
       {
         name: String,
@@ -26,5 +26,7 @@ const invoiceSchema = new Schema(
   },
   { timestamps: true }
 );
+
+invoiceSchema.index({ companyId: 1, invoiceNumber: 1 }, { unique: true });
 
 export default model("Invoice", invoiceSchema);

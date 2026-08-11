@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 const ticketSchema = new Schema(
   {
     companyId: { type: Schema.Types.ObjectId, ref: "Company", required: true, index: true },
-    ticketNumber: { type: String, required: true, unique: true },
+    ticketNumber: { type: String, required: true, trim: true },
     customerId: { type: Schema.Types.ObjectId, ref: "Customer", required: true },
     subject: { type: String, required: true, trim: true },
     description: { type: String, required: true },
@@ -29,5 +29,7 @@ const ticketSchema = new Schema(
   },
   { timestamps: true }
 );
+
+ticketSchema.index({ companyId: 1, ticketNumber: 1 }, { unique: true });
 
 export default model("Ticket", ticketSchema);

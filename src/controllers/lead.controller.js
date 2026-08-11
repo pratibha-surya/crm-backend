@@ -6,7 +6,8 @@ import {
   updateLeadService,
   deleteLeadService,
   addLeadNoteService,
-  assignLeadService
+  assignLeadService,
+  convertLeadToCustomerService
 } from "../services/lead.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
@@ -81,6 +82,12 @@ export const addLeadNote = asyncHandler(async (req, res) => {
 
   const lead = await addLeadNoteService(id, { text, authorName, createdAt: new Date() }, req.user?.companyId);
   return res.status(200).json(new ApiResponse(200, lead, "Note added successfully"));
+});
+
+export const convertLeadToCustomer = asyncHandler(async (req, res) => {
+  const userName = `${req.user?.firstName || "System"} ${req.user?.lastName || "User"}`;
+  const customer = await convertLeadToCustomerService(req.params.id, req.user?.companyId, userName);
+  return res.status(201).json(new ApiResponse(201, customer, "Lead converted to customer successfully"));
 });
 
 export const exportLeadsCSV = asyncHandler(async (req, res) => {

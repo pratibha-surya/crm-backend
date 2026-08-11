@@ -2,7 +2,8 @@ import express from "express";
 import {
   getInvoices,
   createInvoice,
-  updatePaymentStatus
+  updatePaymentStatus,
+  convertQuotationToInvoice
 } from "../controllers/invoice.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 import { checkPermission } from "../middlewares/permission.middleware.js";
@@ -193,6 +194,39 @@ router.get("/", checkPermission("invoices", "read"), getInvoices);
  *                   type: string
  *                   example: "Authentication token invalid or expired."*/
 router.post("/", checkPermission("invoices", "create"), createInvoice);
+
+/**
+ * @swagger
+ * /invoices/from-quotation/{id}:
+ *   post:
+ *     summary: Convert an accepted quotation into an invoice
+ *     tags: [10. Invoice]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [invoiceNumber]
+ *             properties:
+ *               invoiceNumber:
+ *                 type: string
+ *               dueDate:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       201:
+ *         description: Quotation converted to invoice successfully
+ */
+router.post("/from-quotation/:id", checkPermission("invoices", "create"), convertQuotationToInvoice);
 
 /**
  * @swagger
