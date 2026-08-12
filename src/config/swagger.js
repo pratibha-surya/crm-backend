@@ -19,7 +19,7 @@ const options = {
       // },
       {
         name: "03. User Management",
-        description: "STEP 3: Add employees, branches, departments, designations, attendance & leaves (Module 3)"
+        description: "STEP 3: Add employees, branches, departments, designations (Module 3)"
       },
       {
         name: "11. Product Management",

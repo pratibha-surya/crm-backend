@@ -20,8 +20,6 @@ import Invoice from "../models/Invoice.model.js";
 import Payment from "../models/Payment.model.js";
 import Ticket from "../models/Ticket.model.js";
 import Notification from "../models/Notification.model.js";
-import Attendance from "../models/Attendance.model.js";
-import Leave from "../models/Leave.model.js";
 import AuditLog from "../models/AuditLog.model.js";
 import Inquiry from "../models/Inquiry.model.js";
 
@@ -75,8 +73,6 @@ const run = async () => {
   await upsert(Payment, { invoiceId: invoice._id, transactionId: "DEMO-UPI-1001" }, { companyId, invoiceId: invoice._id, amount: 59000, paymentDate: now, paymentMethod: "UPI", transactionId: "DEMO-UPI-1001", status: "SUCCESS", notes: "Demo payment received" });
   await upsert(Ticket, { ticketNumber: "ACME-TKT-1001" }, { companyId, ticketNumber: "ACME-TKT-1001", customerId: customer._id, subject: "Need onboarding assistance", description: "Please share the implementation checklist.", priority: "MEDIUM", status: "OPEN", assignedTo: salesUser._id });
   await upsert(Notification, { companyId, userId: salesUser._id, title: "New onboarding task" }, { companyId, userId: salesUser._id, title: "New onboarding task", body: "Globex kickoff is scheduled for tomorrow.", channel: "In-app", read: false });
-  await upsert(Attendance, { userId: salesUser._id, date: new Date(now.getFullYear(), now.getMonth(), now.getDate()) }, { companyId, userId: salesUser._id, date: new Date(now.getFullYear(), now.getMonth(), now.getDate()), checkIn: now, status: "Present", notes: "Demo attendance" });
-  await upsert(Leave, { companyId, userId: salesUser._id, startDate: tomorrow }, { companyId, userId: salesUser._id, leaveType: "CASUAL", startDate: tomorrow, endDate: tomorrow, reason: "Demo leave request", status: "PENDING" });
   await upsert(AuditLog, { companyId, userId: admin._id, action: "DEMO_SEED" }, { companyId, userId: admin._id, action: "DEMO_SEED", module: "System", details: "Complete CRM demo data seeded", ipAddress: "127.0.0.1", userAgent: "CRM Seeder" });
   await upsert(Inquiry, { email: "visitor@globex.in" }, { name: "Demo Visitor", mobile: "+91 98765 43211", email: "visitor@globex.in", isVerified: true, messages: [{ role: "user", text: "I need a CRM demo.", createdAt: now }, { role: "model", text: "Our sales team will contact you shortly.", createdAt: now }] });
 
