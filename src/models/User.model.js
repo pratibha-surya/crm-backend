@@ -41,6 +41,8 @@ const userSchema = new Schema(
     isDeleted: { type: Boolean, default: false },
     lastLogin: Date,
     refreshToken: { type: String, select: false },
+    googleCalendarRefreshToken: { type: String, select: false },
+    googleCalendarConnectedAt: Date,
     otpCode: { type: String, select: false },
     otpExpiresAt: { type: Date, select: false }
   },

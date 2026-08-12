@@ -15,7 +15,7 @@ export const getMeetings = asyncHandler(async (req, res) => {
 
 export const createMeeting = asyncHandler(async (req, res) => {
   const companyId = req.body.companyId || req.user?.companyId || "000000000000000000000000";
-  const organizer = req.body.organizer || req.user?._id;
+  const organizer = req.user?._id;
   const meeting = await createMeetingService({ ...req.body, companyId, organizer });
   res.status(201).json(new ApiResponse(201, meeting, "Meeting scheduled successfully"));
 });

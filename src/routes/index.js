@@ -26,6 +26,7 @@ import auditLogRoutes from "./auditLog.routes.js";
 import dashboardRoutes from "./dashboard.routes.js";
 import inquiryRoutes from "./inquiry.route.js";
 import notificationRoutes from "./notification.routes.js";
+import googleMeetRoutes from "./googleMeet.routes.js";
 
 const router = express.Router();
 
@@ -67,5 +68,6 @@ router.use("/audit-logs", auditLogRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/inquiries", inquiryRoutes);
 router.use("/notifications", notificationRoutes);
+router.use("/integrations/google", googleMeetRoutes);
 
 export default router;
