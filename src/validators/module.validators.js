@@ -111,6 +111,14 @@ export const validateDesignationPayload = (req, res, next) => {
 
 
 
+export const validateCategoryPayload = (req, res, next) => {
+  const { name } = req.body;
+  if (!name || typeof name !== "string" || name.trim() === "") {
+    throw new ApiError(400, "Category name is required");
+  }
+  next();
+};
+
 export const validateFollowupPayload = (req, res, next) => {
   const { title, dueDate, leadId } = req.body;
   if (!title) throw new ApiError(400, "Followup title is required");

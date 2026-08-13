@@ -9,6 +9,7 @@ import Department from "../models/Department.model.js";
 import Designation from "../models/Designation.model.js";
 import User from "../models/User.model.js";
 import Product from "../models/Product.model.js";
+import Category from "../models/Category.model.js";
 import Lead from "../models/Lead.model.js";
 import Followup from "../models/Followup.model.js";
 import Meeting from "../models/Meeting.model.js";
@@ -61,6 +62,8 @@ const run = async () => {
   const admin = await upsert(User, { email: "admin@acmecrm.in" }, { firstName: "Aarav", lastName: "Sharma", email: "admin@acmecrm.in", phone: "+91 98765 43001", password, role: "COMPANY_ADMIN", companyId, branchId: branch._id, departmentId: department._id, employeeCode: "ACME-001", isActive: true, isVerified: true, permissions });
   const salesUser = await upsert(User, { email: "sales@acmecrm.in" }, { firstName: "Priya", lastName: "Nair", email: "sales@acmecrm.in", phone: "+91 98765 43002", password, role: "SALES_EXECUTIVE", companyId, branchId: branch._id, departmentId: department._id, designationId: designation._id, employeeCode: "ACME-002", isActive: true, isVerified: true });
 
+  await upsert(Category, { companyId, name: "Software" }, { companyId, name: "Software" });
+  await upsert(Category, { companyId, name: "Hardware" }, { companyId, name: "Hardware" });
   const product = await upsert(Product, { sku: "CRM-PRO-ANNUAL" }, { companyId, name: "CRM Pro Annual License", sku: "CRM-PRO-ANNUAL", category: "Software", unit: "license", tax: 18, price: 50000, cost: 15000, stock: 100, isActive: true });
   const customer = await upsert(Customer, { companyId, email: "contact@globex.in" }, { companyId, companyName: "Globex Industries", contactPerson: "Rohan Mehta", email: "contact@globex.in", phone: "+91 98765 43100", industry: "Manufacturing", tags: ["Enterprise", "Demo"], assignedTo: salesUser._id, status: "ACTIVE" });
   const lead = await upsert(Lead, { companyId, email: "contact@globex.in" }, { companyId, title: "Globex CRM Modernization", contactPerson: "Rohan Mehta", email: "contact@globex.in", phone: "+91 98765 43100", companyName: "Globex Industries", source: "WEBSITE", status: "WON", leadScore: 92, assignedTo: salesUser._id, assignedBy: admin._id, notes: [{ text: "Customer approved the annual CRM proposal.", authorName: "Priya Nair", createdAt: now }], timeline: [{ activity: "Lead created", performedBy: "Priya Nair", timestamp: now }, { activity: "Deal won", performedBy: "Aarav Sharma", timestamp: now }] });
